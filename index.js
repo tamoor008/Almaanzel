@@ -1,8 +1,15 @@
-import { registerRootComponent } from 'expo';
+import React from "react";
+import { registerRootComponent } from "expo"; // Expo's equivalent to AppRegistry
+import App from "./App";
+import { Provider } from "react-redux";
+import { store } from "./src/redux/store";
 
-import App from './App';
+// Wrap your App component with the Redux Provider
+const RNRedux = () => (
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
 
-// registerRootComponent calls AppRegistry.registerComponent('main', () => App);
-// It also ensures that whether you load the app in Expo Go or in a native build,
-// the environment is set up appropriately
-registerRootComponent(App);
+// Register the main component with Expo
+registerRootComponent(RNRedux);

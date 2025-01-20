@@ -1,0 +1,15 @@
+export const SampleImages = {
+  user: require("../assets/Images/user.webp"),
+  service1: require("../assets/Images/service1.png"),
+  service2: require("../assets/Images/service2.png"),
+  service3: require("../assets/Images/service3.png"),
+  service4: require("../assets/Images/service4.png"),
+  service5: require("../assets/Images/service5.png"),
+  service6: require("../assets/Images/service6.png"),
+  service7: require("../assets/Images/service7.png"),
+  service8: require("../assets/Images/service8.png"),
+  product1: require("../assets/Images/product1.png"),
+  product2: require("../assets/Images/product2.png"),
+  product3: require("../assets/Images/product3.png"),
+  product4: require("../assets/Images/product4.png"),
+};

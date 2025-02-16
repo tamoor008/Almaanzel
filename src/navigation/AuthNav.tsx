@@ -24,9 +24,9 @@ const AuthNav = () => {
   return (
     <View style={{ flex: 1 }}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {/* {!onboard && (
+        {!onboard && (
           <Stack.Screen name={AppScreens.Onboard} component={Onboard} />
-        )} */}
+        )}
         <Stack.Screen name={AppScreens.Login} component={Login} />
         <Stack.Screen name={AppScreens.Register} component={Register} />
         <Stack.Screen

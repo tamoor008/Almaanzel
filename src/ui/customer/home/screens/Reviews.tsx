@@ -27,6 +27,7 @@ export const Reviews = ({ navigation }) => {
     <View style={styles.container}>
       <Header back={true} heading={"Reviews"} navigation={navigation} />
       <FlatList
+                removeClippedSubviews={false} // <- Add This
         data={reviews}
         ItemSeparatorComponent={() => (
           <View

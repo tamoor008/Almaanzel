@@ -11,10 +11,15 @@ export const ServicesFooter = ({
 }) => {
   return (
     <View style={styles.container}>
+      {price>0?
       <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <Text style={styles.headingText}>{price}</Text>
+        <Text style={styles.headingText}>{'AED '+price}</Text>
         <Text style={styles.descriptionText}>{priceDescription}</Text>
-      </View>
+      </View>:
+       <View style={{ flexDirection: "row", alignItems: "center" }}>
+       <Text style={styles.headingText}>{'Qoutation'}</Text>
+     </View>
+      }
       <View style={{ width: "50%" }}>
         <CustomButton text={btnText} onPress={onPress} />
       </View>

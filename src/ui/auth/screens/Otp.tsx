@@ -12,7 +12,6 @@ import FontFamilty from "../../../constants/FontFamilty";
 import { CustomTextInput } from "../../../components/CustomTextInput";
 import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { authActions } from "../../../redux/slices/authSlice";
 import { AuthButtonsMultiText } from "../components/AuthButtonsMultiText";
 import { AuthHeader } from "../components/AuthHeader";
 

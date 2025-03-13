@@ -4,11 +4,13 @@ import React, { useRef, useState } from "react";
 import { Description } from "../components/Description";
 import FontFamilty from "../../../../constants/FontFamilty";
 import { CustomLargeTextInput } from "../../../../components/CustomLargeTextInput";
+import { CustomInputBaseComp } from "../components/CustomInputBaseComp";
 
 export const WindowsCleaning = ({ item }) => {
   const scrollViewRef = useRef(null);
 
   const [issue, setIssue] = useState("");
+  const [WindowsCleaning, setWindowsCleaning] = useState('')
   return (
     <View style={styles.container}>
       <ScrollView
@@ -24,6 +26,21 @@ export const WindowsCleaning = ({ item }) => {
             "This package contains the window cleaning of your whole house from both internal and external side. This package includes all the things like windows cleaning foams etc"
           }
         />
+
+        <View style={{paddingHorizontal:16}}>
+          <Text style={{fontSize:16,fontWeight:'bold'}}>Per Square meter charges are AED 130</Text>
+          <Text>Please call for home visit and Quotation</Text>
+
+          {/* <CustomInputBaseComp
+            heading={
+              ""
+            }
+            text={WindowsCleaning}
+            descriptionInput={"AED 130 / Sq ft"}
+            setText={setWindowsCleaning}
+          /> */}
+        </View>
+
       </ScrollView>
     </View>
   );

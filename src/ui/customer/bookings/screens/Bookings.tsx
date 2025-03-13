@@ -5,16 +5,26 @@ import {
   Text,
   ScrollView,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 import { AppColors } from "../../../../constants/AppColors";
 import { SampleImages } from "../../../../constants/SampleImages";
 import { Header } from "../../home/components/Header";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FontFamilty from "../../../../constants/FontFamilty";
 import { UpcomingBookingComp } from "../components/UpcomingBookingComp";
 import { PastBookingComp } from "../components/PastBookingComp";
+import database from "@react-native-firebase/database"; // Firebase Realtime Database
+import { useSelector } from "react-redux";
+import moment from 'moment';
 
 export const Bookings = ({ navigation }) => {
+  const selector = useSelector(state => state.AppReducer);
+  const user = selector.user
+  const userId = user.uid
+
+  const [loader, setLoader] = useState(false)
+
   const [tabs, setTabs] = useState([
     {
       label: "Upcoming",
@@ -36,43 +46,54 @@ export const Bookings = ({ navigation }) => {
   };
 
   const [upcomingBookings, setUpcomingBookings] = useState([
-    {
-      id: 1,
-      title: "Need a Hand",
-      bookingid: "#1224214",
-      time: "10:00 - 12:00",
-      date: "Dec\n27\n2024",
-      priceperHour: "AED 99",
-      requiredPersons: "2",
-      requiredHours: "8",
-    },
+  
   ]);
+
   const [pastBookings, setPastBookings] = useState([
-    {
-      id: 1,
-      title: "Tank Cleaning",
-      bookingid: "#1224214",
-      time: "10:00 - 12:00",
-      date: "Dec\n27\n2024",
-      priceperHour: "AED 99",
-      requiredPersons: "2",
-      requiredHours: "8",
-      status: "Cancelled",
-      reason: "Fixer was Late",
-    },
-    {
-      id: 2,
-      title: "Tank Cleaning",
-      bookingid: "#1224215",
-      time: "10:00 - 12:00",
-      date: "Dec\n27\n2024",
-      priceperHour: "AED 99",
-      requiredPersons: "2",
-      requiredHours: "8",
-      status: "Completed",
-      rating: "4.8",
-    },
+ 
   ]);
+
+  const fetchData = async () => {
+    setLoader(true);
+    try {
+      const snapshot = await database().ref('/serviceRequests').child(userId).once('value');
+
+      if (snapshot.exists()) {
+        const rawData = snapshot.val();
+        console.log('Raw Data:', rawData);
+
+        const today = moment().format("YYYY-MM-DD");
+
+        const upcoming = [];
+        const past = [];
+
+        Object.values(rawData).forEach(item => {
+          const bookingDate = moment(item.details.Date).format("YYYY-MM-DD");
+
+          if (bookingDate >= today) {
+            upcoming.push(item);
+          } else {
+            past.push(item);
+          }
+        });
+
+        setUpcomingBookings(upcoming);
+        setPastBookings(past);
+      } else {
+        console.log('No data available');
+        setUpcomingBookings([]);
+        setPastBookings([]);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData()
+  },[tabs])
   return (
     <View style={styles.container}>
       <Header
@@ -80,69 +101,79 @@ export const Bookings = ({ navigation }) => {
         navigation={navigation}
         profile={SampleImages.user}
       />
-      <ScrollView showsVerticalScrollIndicator={false} style={{}}>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginTop: 16,
-            marginHorizontal: 16,
-            backgroundColor: AppColors.white,
-            elevation: 10,
-            borderRadius: 4,
-          }}>
-          {tabs.map((item, index) => (
-            <TouchableOpacity
-              onPress={() => toggleTabsByIndex(index)}
-              activeOpacity={0.9}
-              key={index}
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          marginTop: 16,
+          marginHorizontal: 16,
+          backgroundColor: AppColors.white,
+          elevation: 10,
+          borderRadius: 4,
+        }}>
+        {tabs.map((item, index) => (
+          <TouchableOpacity
+            onPress={() => toggleTabsByIndex(index)}
+            activeOpacity={0.9}
+            key={index}
+            style={{
+              flex: 1,
+              height: 50,
+              padding: 12,
+              borderRadius: 4,
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: item.selected
+                ? AppColors.mainBlue
+                : AppColors.white,
+            }}>
+            <Text
               style={{
-                flex: 1,
-                height: 50,
-                padding: 12,
-                borderRadius: 4,
-                alignItems: "center",
-                justifyContent: "center",
-                backgroundColor: item.selected
-                  ? AppColors.mainBlue
-                  : AppColors.white,
+                fontSize: 12,
+                fontFamily: FontFamilty.medium,
+                color: item.selected ? AppColors.white : AppColors.text8181,
               }}>
-              <Text
-                style={{
-                  fontSize: 10,
-                  fontFamily: FontFamilty.medium,
-                  color: item.selected ? AppColors.white : AppColors.text8181,
-                }}>
-                {item.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
+              {item.label}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      {loader ?
+        <View style={{ ...styles.container, justifyContent: "center" }}>
+          <ActivityIndicator
+            size={"large"}
+            color={AppColors.mainBlue}></ActivityIndicator>
         </View>
+        :
+        <ScrollView showsVerticalScrollIndicator={false} style={{}}>
 
-        {tabs[0].selected && (
-          <FlatList
-            contentContainerStyle={{ padding: 16 }}
-            style={{ flex: 1 }}
-            scrollEnabled={false}
-            ItemSeparatorComponent={() => <View style={{ margin: 8 }}></View>}
-            renderItem={({ item, index }) => (
-              <UpcomingBookingComp item={item} />
-            )}
-            data={upcomingBookings}
-          />
-        )}
 
-        {tabs[1].selected && (
-          <FlatList
-            contentContainerStyle={{ padding: 16 }}
-            style={{ flex: 1 }}
-            ItemSeparatorComponent={() => <View style={{ margin: 8 }}></View>}
-            scrollEnabled={false}
-            renderItem={({ item, index }) => <PastBookingComp item={item} />}
-            data={pastBookings}
-          />
-        )}
-      </ScrollView>
+          {tabs[0].selected && (
+            <FlatList
+              contentContainerStyle={{ padding: 16 }}
+              style={{ flex: 1 }}
+              removeClippedSubviews={false} // <- Add This
+              scrollEnabled={false}
+              ItemSeparatorComponent={() => <View style={{ margin: 8 }}></View>}
+              renderItem={({ item, index }) => (
+                <UpcomingBookingComp navigation={navigation} item={item} />
+              )}
+              data={upcomingBookings}
+            />
+          )}
+
+          {tabs[1].selected && (
+            <FlatList
+              contentContainerStyle={{ padding: 16 }}
+              style={{ flex: 1 }}
+              removeClippedSubviews={false} // <- Add This
+              ItemSeparatorComponent={() => <View style={{ margin: 8 }}></View>}
+              scrollEnabled={false}
+              renderItem={({ item, index }) => <PastBookingComp navigation={navigation} item={item} />}
+              data={pastBookings}
+            />
+          )}
+        </ScrollView>}
     </View>
   );
 };
@@ -153,3 +184,4 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.white,
   },
 });
+

@@ -5,7 +5,7 @@ import { AppColors } from "../../../constants/AppColors";
 import { AuthButtons } from "../components/AuthButtons";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { authActions } from "../../../redux/slices/authSlice";
+import { setOnboard } from "../../../redux/AppReducer";
 
 export const Onboard = () => {
   const dispatch = useDispatch();
@@ -17,7 +17,7 @@ export const Onboard = () => {
       description:
         "Effortlessly request reliable AC, electrical, or plant-based services, and let skilled fixers handle your needs on demand.",
       btnonPress: () => setOnBoardIndex((prevIndex) => prevIndex + 1),
-      textonPress: () => dispatch(authActions.setOnboard(true)),
+      textonPress: () => dispatch(setOnboard(true)),
     },
     {
       img: AppImages.onboard2,
@@ -25,15 +25,15 @@ export const Onboard = () => {
       description:
         "Experience hassle-free home services—request repairs, relax, and let skilled fixers handle the rest with reliability and ease!",
       btnonPress: () => setOnBoardIndex((prevIndex) => prevIndex + 1),
-      textonPress: () => dispatch(authActions.setOnboard(true)),
+      textonPress: () => dispatch(setOnboard(true)),
     },
     {
       img: AppImages.onboard3,
       heading: "Opportunities for Fixers!",
       description:
         "Join a network of skilled professionals, apply for jobs, and grow your income with flexible, contract-based opportunities!",
-      btnonPress: () => dispatch(authActions.setOnboard(true)),
-      textonPress: () => dispatch(authActions.setOnboard(true)),
+      btnonPress: () => dispatch(setOnboard(true)),
+      textonPress: () => dispatch(setOnboard(true)),
     },
   ];
 

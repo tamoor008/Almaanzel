@@ -1,22 +1,57 @@
-import { StyleSheet, View, Text, Image } from "react-native";
+import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import { AppColors } from "../../../../constants/AppColors";
 import { SampleImages } from "../../../../constants/SampleImages";
 import { Header } from "../../home/components/Header";
 import FontFamilty from "../../../../constants/FontFamilty";
 import { AppImages } from "../../../../constants/AppImages";
+import moment from "moment";
 
-export const UpcomingBookingComp = ({ item }) => {
+export const UpcomingBookingComp = ({ item, navigation }) => {
+  console.log(item.details.addon);
+  const dataArray = Object.entries(item.details.addon).map(([key, value]) => ({ key, value }));
+
+  const mergeTimeSlots = (slots) => {
+    if (!slots.length) return "";
+
+    // Extract selected time slots
+    const selectedSlots = slots.filter(slot => slot.selected);
+
+    if (selectedSlots.length === 0) return "";
+
+    // Extract start and end times
+    const startTime = selectedSlots[0].time.split(" - ")[0];
+    const endTime = selectedSlots[selectedSlots.length - 1].time.split(" - ")[1];
+
+    return `${startTime}-${endTime}`;
+  };
+
+  const formatDate = (dateString) => {
+    const date = moment(dateString);
+
+    const month = date.format("MMM").toUpperCase(); // "MAR"
+    const day = date.format("DD"); // "22"
+    const year = date.format("YYYY"); // "2025"
+
+    return { month, day, year };
+  };
+
+  const { month, day, year } = formatDate(item.details.Date);
+
+
+
   return (
-    <View>
+    <TouchableOpacity onPress={() => navigation.navigate('BookingDetails', { item: item })} activeOpacity={0.9} style={{ elevation: 10, backgroundColor: AppColors.white, borderRadius: 16 }}>
       <View style={styles.container}>
         <View>
-          <Text style={styles.descriptionText}>{item.bookingid}</Text>
-          <Text style={styles.headingText}>{item.title}</Text>
+          {item?.displayId && (
+            <Text style={styles.descriptionText}>{'#' + item?.displayId}</Text>
+          )}
+          <Text style={styles.headingText}>{item?.serviceType}</Text>
         </View>
 
         <View>
           <Text style={styles.descriptionText}>{"Time"}</Text>
-          <Text style={styles.headingText}>{item.time}</Text>
+          <Text style={styles.headingText}>{mergeTimeSlots(item?.details?.timeSlot?item?.details?.timeSlot:'')}</Text>
         </View>
 
         <View
@@ -25,34 +60,30 @@ export const UpcomingBookingComp = ({ item }) => {
             alignItems: "center",
             columnGap: 8,
             marginTop: 8,
+            flexWrap:'wrap',
+            rowGap:8,
+            width:'65%'
           }}>
-          <View
-            style={{
-              borderRadius: 100,
-              backgroundColor: AppColors.mainBlue,
-              paddingHorizontal: 12,
-              paddingVertical: 4,
-              flexDirection: "row",
+          {dataArray.map((item ) => 
 
-              alignItems: "center",
-            }}>
-            <Text style={styles.labelText}>{item.requiredPersons}</Text>
-            <Text style={styles.labelText}>{" Persons"}</Text>
-          </View>
-          <View
-            style={{
-              borderRadius: 100,
-              backgroundColor: AppColors.mainBlue,
-              paddingHorizontal: 12,
-              paddingVertical: 4,
-              flexDirection: "row",
-              alignItems: "center",
-            }}>
-            <Text style={styles.labelText}>{item.requiredHours}</Text>
-            <Text style={styles.labelText}>{" Hours"}</Text>
-          </View>
+            <View
+              style={{
+                borderRadius: 100,
+                backgroundColor: AppColors.mainBlue,
+                paddingHorizontal: 12,
+                paddingVertical: 4,
+                flexDirection: "row",
+
+                alignItems: "center",
+              }}>
+              <Text style={styles.labelText}>{item.value}</Text>
+            </View>
+          )}
+
+        
         </View>
       </View>
+
       <View
         style={{
           position: "absolute",
@@ -60,6 +91,7 @@ export const UpcomingBookingComp = ({ item }) => {
           height: "100%",
           right: 0,
           bottom: 0,
+          zIndex: 100,
         }}>
         <Image
           resizeMode="stretch"
@@ -69,6 +101,7 @@ export const UpcomingBookingComp = ({ item }) => {
             width: "100%",
             height: "95%",
             bottom: 0,
+            zIndex: 10
           }}
         />
         <View
@@ -79,22 +112,25 @@ export const UpcomingBookingComp = ({ item }) => {
             right: 0,
             alignItems: "flex-end",
             padding: 8,
+            zIndex: 100,
+            // backgroundColor:'red',
+            rowGap: 8
           }}>
-          <Text style={styles.dateText}>{item.date}</Text>
-          <Text style={styles.dateText}>
-            {item.priceperHour}
-            <Text
-              style={{
-                fontSize: 12,
-                fontFamily: FontFamilty.regular,
-                color: AppColors.white80,
-              }}>
-              {" / hour"}
+          <View style={{ alignItems: 'center' }}>
+            <Text style={styles.dateTextDim}>{day}</Text>
+            <Text style={styles.dateText}>{month}</Text>
+            <Text style={styles.dateTextDim}>{year}</Text>
+
+          </View>
+          {item?.price && (
+            <Text style={styles.dateText}>
+              {'AED ' + item?.price}
             </Text>
-          </Text>
+          )}
+
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -103,12 +139,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: AppColors.white,
     borderRadius: 8,
-    elevation: 10,
     padding: 16,
     rowGap: 8,
   },
   descriptionText: {
-    fontSize: 8,
+    fontSize: 10,
     fontFamily: FontFamilty.medium,
     color: AppColors.text8181,
   },
@@ -126,6 +161,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: FontFamilty.black,
     color: AppColors.white,
+    textAlign: "right",
+  },
+  dateTextDim: {
+    fontSize: 14,
+    fontFamily: FontFamilty.medium,
+    color: AppColors.white80,
     textAlign: "right",
   },
 });

@@ -209,6 +209,7 @@ export const ProductPage = ({ navigation }) => {
             Product Loved by others
           </Text>
           <FlatList
+                    removeClippedSubviews={false} // <- Add This
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ padding: 16, paddingBottom: 32 }}

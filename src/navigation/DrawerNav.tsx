@@ -4,9 +4,9 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Login } from "../ui/auth/screens/Login";
 import { Onboard } from "../ui/auth/screens/Onboard";
 import { HomeScreen } from "../ui/customer/home/screens/HomeScreen";
-import BtmNav from "./BtmNav";
 import { ProfileScreen } from "../ui/customer/profile/screens/ProfileScreen";
 import ProfileNav from "./ProfileNav";
+import BtmNav from "./BtmNav";
 
 const Drawer = createDrawerNavigator();
 

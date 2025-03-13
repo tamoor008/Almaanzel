@@ -11,26 +11,64 @@ import FontFamilty from "../../../constants/FontFamilty";
 import { CustomTextInput } from "../../../components/CustomTextInput";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { authActions } from "../../../redux/slices/authSlice";
 import { AuthButtonsMultiText } from "../components/AuthButtonsMultiText";
 import { AuthHeader } from "../components/AuthHeader";
+import { setUser, setisLoggedin } from "../../../redux/AppReducer";
+import auth from '@react-native-firebase/auth';
+import database from '@react-native-firebase/database';
 
 export const Login = ({ navigation }) => {
+  const reference = database().ref('/users/');
   const dispatch = useDispatch();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("tamoormalik088@gmail.com");
+  const [password, setPassword] = useState("11111111");
   const [loader, setLoader] = useState(false);
+  const [errorText, setErrorText] = useState('')
 
   const onPasswordChange = (text) => {
     setPassword(text);
   };
 
-  const signIn = () => {
+
+
+
+  const signIn = async (email, password) => {
     setLoader(true);
-    setTimeout(() => {
-      dispatch(authActions.setIsLoggedIn(true));
-    }, 2000);
+  
+    if (!email || !password) {
+      setErrorText("Enter all the credentials");
+      setLoader(false);
+      return;
+    }
+  
+    try {
+      const userCredential = await auth().signInWithEmailAndPassword(email, password);
+      const user = userCredential.user;
+      console.log("User signed in:", user);
+  
+      // Fetch user data from Firebase Realtime Database
+      const snapshot = await reference.child(`${user.uid}/userInfo`).once("value");
+  
+      if (snapshot.exists()) {
+        const userData = snapshot.val();
+        dispatch(setUser(userData)); // Save fetched data into Redux
+      } else {
+        console.log("User data not found in database");
+        dispatch(setUser(null));
+      }
+  
+      setLoader(false);
+      dispatch(setisLoggedin(true));
+  
+    } catch (error) {
+      setErrorText(error.message);
+      console.log("Sign-in error:", error.toString());
+      setLoader(false);
+    }
   };
+  
+  
+
 
   const navigateSignUp = () => {
     navigation.navigate("Register");
@@ -74,6 +112,13 @@ export const Login = ({ navigation }) => {
                   style={{}}
                   secureTextEntry={true}
                 />
+                {errorText && (
+                  <Text
+                    style={{...styles.forgotPasswordText,color:AppColors.red,alignSelf:'flex-start',fontSize:14}}>
+                    {errorText}
+                  </Text>
+                )}
+
                 <Text
                   onPress={navigateForgotPassword}
                   style={styles.forgotPasswordText}>
@@ -85,7 +130,7 @@ export const Login = ({ navigation }) => {
 
           <AuthButtonsMultiText
             textonPress={navigateSignUp}
-            btnonPress={signIn}
+            btnonPress={() => signIn(email, password)}
             btnText={"Sign In"}
             textPrefix={"Don't have an account?"}
             textSuffix={"Sign Up"}

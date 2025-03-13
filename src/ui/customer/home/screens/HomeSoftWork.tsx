@@ -128,7 +128,7 @@ export const HomeSoftWork = ({ item }) => {
               />
               <CustomInputBaseComp
                 heading={
-                  "Enter the number of Square Feet you want us to work in."
+                  "Enter the number of Square Meter you want us to work in."
                 }
                 text={gypsumWorkSqft}
                 descriptionInput={"AED 120 / Sq ft"}
@@ -147,7 +147,7 @@ export const HomeSoftWork = ({ item }) => {
               />
               <CustomInputBaseComp
                 heading={
-                  "Enter the number of Square Feet you want us to work in."
+                  "Enter the number of Square Meter you want us to work in."
                 }
                 text={falseceilingSqft}
                 descriptionInput={"AED 130 / Sq ft"}
@@ -164,7 +164,7 @@ export const HomeSoftWork = ({ item }) => {
                 }
               />
               <CustomInputBaseComp
-                heading={"Enter the approximate number of hours required."}
+                heading={"Enter the approximate number of Doors which needs to be changed/adjusted."}
                 text={dooradjustmenthr}
                 descriptionInput={"AED 100 / Hour"}
                 setText={setdooradjustmenthr}

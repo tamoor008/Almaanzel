@@ -6,49 +6,38 @@ import { useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
 import { CustomTextInput } from "../../../../components/CustomTextInput";
 
-export const PersonComp = ({ item, removePerson, index }) => {
+export const PersonComp = ({ item, removePerson, index, updatePerson }) => {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState(item.personType || null); // Set initial value
   const [items, setItems] = useState([
-    { label: "Handy Man  (AED 14/hr)", value: "Handy Man (AED 14/hr)" },
+    { label: "Handy Man (AED 14/hr)", value: "Handy Man (AED 14/hr)" },
     { label: "Electrician (AED 14/hr)", value: "Electrician (AED 14/hr)" },
     { label: "Plumber (AED 14/hr)", value: "Plumber (AED 14/hr)" },
   ]);
 
-  const [hours, setHours] = useState(0);
+  const [hours, setHours] = useState(item.hours || 0);
   const [hourOption, setHourOption] = useState([
-    {
-      label: "1 Hour",
-      selected: false,
-    },
-    {
-      label: "4 Hours",
-      selected: false,
-    },
-    {
-      label: "Full Day",
-      selected: false,
-    },
-    {
-      label: "Custom",
-      selected: false,
-    },
+    { label: "1 Hour", value: 1, selected: true },
+    { label: "4 Hours", value: 4, selected: false },
+    { label: "Full Day", value: 8, selected: false },
+    { label: "Custom", value: "custom", selected: false },
   ]);
 
-  const handleItemPress = (index) => {
-    // Create a copy of the hourOption array
-    const updatedOptions = hourOption.map((item, i) => {
-      // Toggle the selected property for the clicked item
-      if (i === index) {
-        return { ...item, selected: !item.selected };
-      }
-      // Deselect all other items
-      return { ...item, selected: false };
-    });
+  const handleItemPress = (i) => {
+    const updatedOptions = hourOption.map((option, index) => ({
+      ...option,
+      selected: index === i, // Select only the clicked option
+    }));
 
-    // Update the state with the new array
     setHourOption(updatedOptions);
+
+    const selectedOption = updatedOptions[i];
+    if (selectedOption.value !== "custom") {
+      setHours(selectedOption.value);
+      updatePerson(index, "hours", selectedOption.value);
+    }
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.rowContainer}>
@@ -65,21 +54,24 @@ export const PersonComp = ({ item, removePerson, index }) => {
           {"Choose from whom you need the help for this task?"}
         </Text>
         <DropDownPicker
+        
           open={open}
           value={value}
           items={items}
           setOpen={setOpen}
-          setValue={setValue}
+          setValue={(selectedValue) => {
+            setValue(selectedValue);
+            updatePerson(index, "personType", value); // Update in NeedHand
+          }}
           setItems={setItems}
           placeholder="Select Person"
           style={styles.dropdown}
           dropDownContainerStyle={styles.dropdownContainer}
         />
       </View>
+
       <View style={{ rowGap: 16, marginTop: 16 }}>
-        <Text style={styles.semiBold16}>
-          {"Choose for how long you need the help."}
-        </Text>
+        <Text style={styles.semiBold16}>{"Choose for how long you need the help."}</Text>
         <View
           style={{
             ...styles.rowContainer,
@@ -87,7 +79,7 @@ export const PersonComp = ({ item, removePerson, index }) => {
             flexWrap: "wrap",
             rowGap: 16,
           }}>
-          {hourOption.map((item, index) => (
+          {hourOption.map((item, i) => (
             <TouchableOpacity
               activeOpacity={0.9}
               style={{
@@ -98,8 +90,8 @@ export const PersonComp = ({ item, removePerson, index }) => {
                   ? AppColors.mainBlue
                   : AppColors.grey,
               }}
-              key={index}
-              onPress={() => handleItemPress(index)}>
+              key={i}
+              onPress={() => handleItemPress(i)}>
               <Text
                 style={{
                   fontSize: 12,
@@ -114,7 +106,10 @@ export const PersonComp = ({ item, removePerson, index }) => {
 
         {hourOption[3].selected && (
           <CustomTextInput
-            setText={setHours}
+            setText={(text) => {
+              setHours(text);
+              updatePerson(index, "hours", text);
+            }}
             keyboardType={"numeric"}
             placeholder={"Enter Number of Hours"}
             text={hours}
@@ -124,6 +119,8 @@ export const PersonComp = ({ item, removePerson, index }) => {
     </View>
   );
 };
+
+
 
 const styles = StyleSheet.create({
   container: {

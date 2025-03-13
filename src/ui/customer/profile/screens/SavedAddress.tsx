@@ -50,6 +50,7 @@ export const SavedAddress = ({ navigation }) => {
           backgroundColor: AppColors.greybg,
         }}>
         <FlatList
+                  removeClippedSubviews={false} // <- Add This
           ItemSeparatorComponent={() => (
             <View
               style={{

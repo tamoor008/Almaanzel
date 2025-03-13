@@ -84,6 +84,7 @@ export const Store = ({ navigation }) => {
           icon={AppImages.search}
         />
         <FlatList
+                  removeClippedSubviews={false} // <- Add This
           numColumns={2}
           columnWrapperStyle={{
             justifyContent: "space-between",

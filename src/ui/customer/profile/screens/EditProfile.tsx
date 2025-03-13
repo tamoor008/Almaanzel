@@ -1,37 +1,96 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, ActivityIndicator,Text } from "react-native";
 import { AppColors } from "../../../../constants/AppColors";
 import { useState } from "react";
 import { Header } from "../../home/components/Header";
 import { CustomButton } from "../../../../components/CustomButton";
 import { CustomTextInput } from "../../../../components/CustomTextInput";
+import auth from '@react-native-firebase/auth';
+import database from '@react-native-firebase/database';
+import { useDispatch } from "react-redux";
+import { setUser, setisLoggedin } from "../../../../redux/AppReducer";
+import { useSelector } from "react-redux";
 
 export const EditProfile = ({ navigation }) => {
-  const [name, setName] = useState("Asim Mehmood");
-  const [email, setEmail] = useState("asimmehmood@gmail.com");
-  const [number, setNumber] = useState("+92-3215799205");
+  const selector = useSelector(state => state.AppReducer);
+  const user=selector.user
+  console.log(user);
+  
+  const dispatch = useDispatch();
+  const [name, setName] = useState(user.displayName);
+  const [number, setNumber] = useState(user.phoneNumber);
+  const userId = user?.uid;
+  const reference = database().ref('/users/');
+  const [loader, setLoader] = useState(false)
+  const [errorText, setErrorText] = useState('')
 
-  const goBack = () => {
-    navigation.goBack();
+  const updateUserInfo = async (updatedData) => {
+    setLoader(true);
+  
+    if (!userId) {
+      console.log("User not logged in");
+      setLoader(false);
+      dispatch(setisLoggedin(false));
+      return;
+    }
+  
+    try {
+      // Update user data in Firebase
+      await reference.child(`${userId}/userInfo`).update(updatedData);
+      console.log("User info updated successfully");
+  
+      // Fetch updated user data
+      const snapshot = await reference.child(`${userId}/userInfo`).once("value");
+  
+      if (snapshot.exists()) {
+        const updatedUserData = snapshot.val();
+        dispatch(setUser(updatedUserData)); // Save updated data in Redux
+      } else {
+        console.log("Failed to fetch updated user data");
+      }
+  
+      setLoader(false);
+      navigation.goBack();
+    } catch (error) {
+      setErrorText("Error updating user info: " + error.message);
+      console.log("Error updating user info:", error.message);
+      setLoader(false);
+    }
   };
+  
   return (
     <View style={styles.container}>
       <Header heading={"Edit Profile"} back={true} navigation={navigation} />
-      <View style={{ flex: 1, padding: 16, rowGap: 16 }}>
-        <CustomTextInput text={name} setText={setName} placeholder={"Name"} />
-        <CustomTextInput
-          text={email}
-          setText={setEmail}
-          placeholder={"Email"}
-        />
-        <CustomTextInput
-          text={number}
-          setText={setNumber}
-          placeholder={"Number"}
-        />
-      </View>
-      <View style={{ padding: 16 }}>
-        <CustomButton onPress={goBack} text={"Save"} />
-      </View>
+      {loader ?
+        <View style={{ ...styles.container, justifyContent: "center" }}>
+          <ActivityIndicator
+            size={"large"}
+            color={AppColors.mainBlue}></ActivityIndicator>
+        </View>
+        :
+        <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, padding: 16, rowGap: 16 }}>
+            <CustomTextInput text={name} setText={setName} placeholder={"Name"} />
+            <CustomTextInput
+              text={number}
+              setText={setNumber}
+              placeholder={"Number"}
+            />
+             {errorText && (
+                  <Text
+                    style={{color:AppColors.red,alignSelf:'flex-start',fontSize:14}}>
+                    {errorText}
+                  </Text>
+                )}
+          </View>
+          <View style={{ padding: 16 }}>
+            <CustomButton onPress={() => updateUserInfo({
+              displayName: name,
+              phoneNumber: number,
+            })
+            } text={"Save"} />
+          </View>
+        </View>
+      }
     </View>
   );
 };

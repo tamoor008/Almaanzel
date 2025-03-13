@@ -7,22 +7,25 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { AppColors } from "../../../../constants/AppColors";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Description } from "../components/Description";
 import FontFamilty from "../../../../constants/FontFamilty";
 import { QoutationBaseComp } from "../components/QoutationBaseComp";
 import { OptionBaseComp } from "../components/OptionBaseComp";
 
-export const WaterTankHeater = ({ item }) => {
+export const WaterTankHeater = ({ item, updateServiceDetails, setPrice }) => {
   const scrollViewRef = useRef(null);
 
   const [waterTankCleaningOption, setWaterTankCleaningOption] = useState([
     {
       label: "On Ground",
       selected: true,
+      price:0,
+
     },
     {
       label: "Under Ground",
+      price:100,
       selected: false,
       description:
         "The Price of ON-GROUND water tank replacement is quotation base. Our agent will visit your location and will give you the exact price according to your required size.",
@@ -32,20 +35,26 @@ export const WaterTankHeater = ({ item }) => {
     {
       label: "Repair",
       selected: true,
+      price:200,
+
     },
     {
       label: "Full Change",
       selected: false,
+      price:400,
+
     },
   ]);
 
   const [onGroundOption, setOnGroundOptions] = useState([
     {
-      label: "Less then 1000 Gallon",
+      label: "Less than 1000 Gallon",
+      price:200,
       selected: true,
     },
     {
-      label: "More then 1000 Gallon",
+      label: "More than 1000 Gallon",
+      price:400,
       selected: false,
     },
   ]);
@@ -54,16 +63,24 @@ export const WaterTankHeater = ({ item }) => {
     {
       label: "Water Tank Cleaning",
       selected: false,
+      price:0,
+
     },
     {
       label: "Water Tank Replacement",
       selected: false,
+      price:0,
+
     },
     {
       label: "Water Heater",
       selected: true,
+      price:0,
+
     },
   ]);
+
+  // Function to update the selected service category
   const toggleTabsByIndex = (index) => {
     setTabs((prevOptions) =>
       prevOptions.map((option, i) =>
@@ -72,12 +89,78 @@ export const WaterTankHeater = ({ item }) => {
           : { ...option, selected: false }
       )
     );
+
   };
+
+  const updateSelectedOptions = () => {
+    console.log("FUNCTION RUN");
+  
+    const selectedTab = tabs.find((tab) => tab.selected)?.label || null;
+  
+    let selectedWaterTankCleaning = waterTankCleaningOption
+      .filter((option) => option.selected)
+      .map((option) => ({ label: option.label, price: option.price || 0 }));
+  
+    let selectedWaterHeater = waterHeaterOptions
+      .filter((option) => option.selected)
+      .map((option) => ({ label: option.label, price: option.price || 0 }));
+  
+    let selectedOnGround = onGroundOption
+      .filter((option) => option.selected)
+      .map((option) => ({ label: option.label, price: option.price || 0 }));
+  
+    let selectedOptions = { serviceCategory: selectedTab };
+    let totalPrice = 0;
+  
+    if (selectedTab === "Water Tank Cleaning") {
+      if (selectedWaterTankCleaning.some((item) => item.label === "On Ground")) {
+        selectedOptions.waterTankCleaning = "On Ground";
+        if (selectedOnGround.length) {
+          selectedOptions.onGround = selectedOnGround[0].label;
+          totalPrice += selectedOnGround[0].price;
+        }
+      } else {
+        selectedOptions.waterTankCleaning = "Under Ground";
+        totalPrice += selectedWaterTankCleaning[0]?.price || 0;
+      }
+    } else if (selectedTab === "Water Heater") {
+      selectedOptions.waterHeater = selectedWaterHeater.length
+        ? selectedWaterHeater[0].label
+        : null;
+      totalPrice += selectedWaterHeater[0]?.price || 0;
+    } else if (selectedTab === "Water Tank Replacement") {
+      selectedOptions.waterTankReplacement = "Quotation Based";
+      totalPrice = 0; // Since the price is determined by an agent
+    }
+  
+    // Remove null values
+    Object.keys(selectedOptions).forEach((key) => {
+      if (!selectedOptions[key]) delete selectedOptions[key];
+    });
+  
+    // Update service details with selected options
+    updateServiceDetails("addon", selectedOptions);
+  
+    // Update the total price
+    setPrice(totalPrice);
+  };
+  
+
+
+
+
+
+  // Run updateSelectedOptions when any option changes
+  useEffect(() => {
+    updateSelectedOptions();
+  }, [waterTankCleaningOption, waterHeaterOptions, onGroundOption,tabs]);
+
   return (
     <View style={styles.container}>
       <ScrollView
         contentContainerStyle={{ paddingBottom: 16 }}
-        ref={scrollViewRef}>
+        ref={scrollViewRef}
+      >
         <Image
           resizeMode="stretch"
           style={{ height: 249, width: "100%" }}
@@ -97,7 +180,8 @@ export const WaterTankHeater = ({ item }) => {
               backgroundColor: AppColors.white,
               elevation: 10,
               borderRadius: 4,
-            }}>
+            }}
+          >
             {tabs.map((item, index) => (
               <TouchableOpacity
                 onPress={() => toggleTabsByIndex(index)}
@@ -113,13 +197,15 @@ export const WaterTankHeater = ({ item }) => {
                   backgroundColor: item.selected
                     ? AppColors.mainBlue
                     : AppColors.white,
-                }}>
+                }}
+              >
                 <Text
                   style={{
                     fontSize: 10,
                     fontFamily: FontFamilty.medium,
                     color: item.selected ? AppColors.white : AppColors.text8181,
-                  }}>
+                  }}
+                >
                   {item.label}
                 </Text>
               </TouchableOpacity>

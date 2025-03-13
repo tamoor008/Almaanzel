@@ -21,7 +21,7 @@ import { AppColors } from "../../../../constants/AppColors";
 import { Description } from "./Description";
 import FontFamilty from "../../../../constants/FontFamilty";
 
-const BottomSheetTimeSlots = ({ bottomSheetRef, onSelectTime }) => {
+const BottomSheetTimeSlots = ({ bottomSheetRef, onSelectTime,setTimeSlots,timeSlots }) => {
   const renderBackdrop = useCallback(
     (props) => (
       <BottomSheetBackdrop
@@ -32,24 +32,20 @@ const BottomSheetTimeSlots = ({ bottomSheetRef, onSelectTime }) => {
     ),
     []
   );
-  const [timeSlots, setTimeSlots] = useState(
-    Array.from({ length: 8 }, (_, i) => ({
-      time: `${8 + i}:00 - ${9 + i}:00`,
-      selected: false,
-    }))
-  );
+ 
 
   const snapPoints = useMemo(() => ["65%"], []);
 
   const handleSlotSelection = (index) => {
     setTimeSlots((prevSlots) =>
-      prevSlots.map((slot, i) => ({
-        ...slot,
-        selected: i === index, // Mark only the clicked slot as selected
-      }))
+      prevSlots.map((slot, i) =>
+        i === index ? { ...slot, selected: !slot.selected } : slot
+      )
     );
-    onSelectTime(timeSlots[index].time); // Send selected time to parent
+
+    onSelectTime()
   };
+  
   return (
     <BottomSheetModal
       ref={bottomSheetRef}
@@ -62,6 +58,7 @@ const BottomSheetTimeSlots = ({ bottomSheetRef, onSelectTime }) => {
           <Text style={styles.title}>Select a Preferred Time Slot</Text>
           <FlatList
             scrollEnabled={false}
+            removeClippedSubviews={false} // <- Add This
             data={timeSlots}
             renderItem={({ item, index }) => (
               <TouchableOpacity

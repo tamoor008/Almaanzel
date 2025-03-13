@@ -18,17 +18,19 @@ import { AppScreens } from "../constants/AppScreens";
 
 const AuthNav = () => {
   const Stack = createNativeStackNavigator();
-  const { onboard } = useSelector((state) => state.auth);
-  console.log(onboard, "onboard");
+  const selector = useSelector(state => state.AppReducer);
+  // console.log(onboard, "onboard");
 
   return (
     <View style={{ flex: 1 }}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {!onboard && (
+        {/* {!selector.onboard && (
           <Stack.Screen name={AppScreens.Onboard} component={Onboard} />
-        )}
+        )} */}
         <Stack.Screen name={AppScreens.Login} component={Login} />
+
         <Stack.Screen name={AppScreens.Register} component={Register} />
+
         <Stack.Screen
           name={AppScreens.ForgotPassword}
           component={ForgotPassword}

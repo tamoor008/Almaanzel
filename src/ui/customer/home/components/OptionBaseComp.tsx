@@ -20,6 +20,7 @@ export const OptionBaseComp = ({ heading, options, setOptions }) => {
         }
       })
     );
+
   };
 
   const getSelectedOptionDescription = () => {

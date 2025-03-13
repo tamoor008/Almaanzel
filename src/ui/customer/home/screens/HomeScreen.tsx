@@ -129,6 +129,7 @@ export const HomeScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Header navigation={navigation} profile={SampleImages.user} />
       <FlatList
+        removeClippedSubviews={false} // <- Add This
         ItemSeparatorComponent={() => <View style={{ margin: 8 }}></View>}
         contentContainerStyle={{ padding: 16 }}
         renderItem={({ item, index }) => (

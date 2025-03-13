@@ -7,16 +7,18 @@ import FontFamilty from "../../../../constants/FontFamilty";
 import { CustomTextInput } from "../../../../components/CustomTextInput";
 import { SuccessModal } from "../../../../components/SuccessModal";
 
-export const PaymentInformation = ({ navigation }) => {
+export const PaymentInformation = ({ navigation,updateServiceData }) => {
   const [name, setName] = useState("");
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
   const [cvc, setCVC] = useState("");
 
   const [paymentMethods, setPaymentMethods] = useState([
-    { id: 1, img: AppImages.card, label: "Card/Debit Card", selected: true },
+    { id: 1, img: AppImages.card, label: "Card on delivery", selected: true },
     { id: 2, img: AppImages.cash, label: "Cash", selected: false },
   ]);
+
+
   const changeSelectedStatus = (index) => {
     setPaymentMethods((prevMethods) =>
       prevMethods.map((method, i) => ({
@@ -24,7 +26,16 @@ export const PaymentInformation = ({ navigation }) => {
         selected: i === index, // Set `selected` to true only for the clicked index
       }))
     );
+  
+    // Get the selected payment method
+    const selectedPayment = paymentMethods.find((_, i) => i === index);
+    console.log('selectedPayment',selectedPayment);
+    
+  
+    // Update service data with only the selected payment method
+    updateServiceData("selectedPayment", selectedPayment);
   };
+  
 
   return (
     <ScrollView>
@@ -32,6 +43,7 @@ export const PaymentInformation = ({ navigation }) => {
         <View style={{ rowGap: 16 }}>
           <Text style={styles.semiBold16}>{"Payment Methods"}</Text>
           <FlatList
+            removeClippedSubviews={false} // <- Add This
             scrollEnabled={false}
             data={paymentMethods}
             ItemSeparatorComponent={() => <View style={{ margin: 4 }}></View>}
@@ -45,7 +57,7 @@ export const PaymentInformation = ({ navigation }) => {
           />
         </View>
 
-        <View style={{ rowGap: 16 }}>
+        {/* <View style={{ rowGap: 16 }}>
           <Text style={styles.semiBold16}>{"Payment Information"}</Text>
           <CustomTextInput
             text={name}
@@ -70,7 +82,7 @@ export const PaymentInformation = ({ navigation }) => {
                 placeholder={"CVC"}></CustomTextInput>
             </View>
           </View>
-        </View>
+        </View> */}
       </View>
     </ScrollView>
   );

@@ -17,12 +17,42 @@ import { EmergencyCall } from "./EmergencyCall";
 import { WindowsCleaning } from "./WindowsCleaning";
 import { HomeSoftWork } from "./HomeSoftWork";
 import { AnnualMaintenancePackage } from "./AnnualMaintenancePackage";
+import database from "@react-native-firebase/database"; // Firebase Realtime Database
+import { useSelector } from "react-redux";
 
 export const ServiceDetails = ({ navigation }) => {
+  const selector = useSelector(state => state.AppReducer);
+  const user = selector.user
+  const userId = user.uid
   const router = useRoute();
   const [progress, setProgress] = useState(0.25);
-  const { type, item } = router.params;
+  const { type, item } = router.params; // Fetch userId from params
   const [successModalVisible, setSuccessModalVisible] = useState(false);
+  const [price, setPrice] = useState(0)
+
+  // ✅ Centralized service data state
+  const [serviceData, setServiceData] = useState({
+    displayId:'123123',
+    serviceType: item.heading,
+    userId: userId,
+    status: 'Upcoming',
+    price:price,
+    details: {},
+  });
+
+  // ✅ Function to update service details dynamically
+  const updateServiceData = (key, value) => {
+    console.log('serviceData',serviceData);
+
+    setServiceData((prevData) => ({
+      ...prevData,
+      price:price,
+      details: {
+        ...prevData.details,
+        [key]: value,
+      },
+    }));
+  };
 
   useFocusEffect(
     React.useCallback(() => {
@@ -37,33 +67,50 @@ export const ServiceDetails = ({ navigation }) => {
             borderTopLeftRadius: 16,
             borderTopRightRadius: 16,
           },
-        }); // Reset tab bar when leaving screen
+        });
       };
     }, [navigation])
   );
+
   const goBack = () => {
     navigation.goBack();
   };
 
+  // ✅ Function to handle service submission
+  const submitServiceRequest = async () => {
+    console.log('final service data', serviceData);
+
+    try {
+      await database()
+        .ref(`/serviceRequests/${userId}`)
+        .push(serviceData);
+      setSuccessModalVisible(true);
+    } catch (error) {
+      console.log("Error submitting service request:", error.message);
+    }
+  };
+
+  // ✅ Function to render the correct component based on service type
   const renderComponent = (key) => {
+    const commonProps = { item, updateServiceData };
+
     switch (key) {
       case "NeedHand":
-        return <NeedHand item={item} />;
-
+        return <NeedHand setPrice={setPrice} updateServiceDetails={updateServiceData} item={item} />;
       case "watertank&services":
-        return <WaterTankHeater item={item} />;
+        return <WaterTankHeater setPrice={setPrice} updateServiceDetails={updateServiceData} item={item} />;
       case "GardenPackages":
-        return <GardenPackages item={item} />;
+        return <GardenPackages setPrice={setPrice} updateServiceDetails={updateServiceData} item={item}/>;
       case "AcServicePackages":
-        return <AcServicePackages item={item} />;
+        return <AcServicePackages {...commonProps} />;
       case "EmergencyCall":
-        return <EmergencyCall item={item} />;
+        return <EmergencyCall {...commonProps} />;
       case "WindowsCleaning":
-        return <WindowsCleaning item={item} />;
+        return <WindowsCleaning {...commonProps} />;
       case "HomeSoftWork":
-        return <HomeSoftWork item={item} />;
+        return <HomeSoftWork {...commonProps} />;
       case "AnnualMaintenancePackage":
-        return <AnnualMaintenancePackage item={item} />;
+        return <AnnualMaintenancePackage {...commonProps} />;
       default:
         return <View style={{ flex: 1 }}></View>;
     }
@@ -73,23 +120,24 @@ export const ServiceDetails = ({ navigation }) => {
     <View style={styles.container}>
       <Header back={true} heading={item.heading} navigation={navigation} />
       <ProgressBar progress={progress} />
-      {progress == 0.25 && renderComponent(type)}
-      {progress == 0.5 && <DateSelection />}
-      {progress == 0.75 && <CustomRequirements />}
-      {progress == 1 && <PaymentInformation />}
+
+      {progress === 0.25 && renderComponent(type)}
+      {progress === 0.5 && <DateSelection type={type} updateServiceData={updateServiceData} />}
+      {progress === 0.75 && <CustomRequirements navigation={navigation} updateServiceData={updateServiceData} />}
+      {progress === 1 && <PaymentInformation navigation={navigation} updateServiceData={updateServiceData} />}
 
       <ServicesFooter
         onPress={() => {
           setProgress((progress) => {
             if (progress < 1) {
-              return progress + 0.25; // Return the updated progress
+              return progress + 0.25;
             } else {
-              setSuccessModalVisible(true);
-              return 1; // Ensure progress does not exceed 1
+              submitServiceRequest();
+              return 1;
             }
           });
         }}
-        price={item.price}
+        price={price}
         priceDescription={item.footerDescription}
         btnText={"Next"}
       />
@@ -99,7 +147,7 @@ export const ServiceDetails = ({ navigation }) => {
         visible={successModalVisible}
         heading={"Congratulations"}
         description={
-          "Your request has been submitted Successfully you will receive the confirmation email soon.\n Thank You."
+          "Your request has been submitted Successfully. You will receive a confirmation email soon.\nThank You."
         }
         btnText={"Ok"}
       />

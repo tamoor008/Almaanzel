@@ -10,7 +10,6 @@ import FontFamilty from "../../../constants/FontFamilty";
 import { CustomTextInput } from "../../../components/CustomTextInput";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { authActions } from "../../../redux/slices/authSlice";
 import { AuthButtonsMultiText } from "../components/AuthButtonsMultiText";
 import { AuthHeader } from "../components/AuthHeader";
 import { SuccessModal } from "../../../components/SuccessModal";
@@ -38,7 +37,6 @@ export const ChangePassword = ({ navigation }) => {
   };
 
   const signUp = () => {
-    dispatch(authActions.setIsLoggedIn(true));
   };
 
   const navigatetoSignin = () => {
@@ -165,3 +163,5 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
 });
+
+

@@ -62,6 +62,7 @@ export const CartCheckOut = ({ navigation }) => {
       <Header navigation={navigation} back={true} heading={"Checkout"} />
 
       <FlatList
+                removeClippedSubviews={false} // <- Add This
         scrollEnabled={false}
         contentContainerStyle={{ padding: 16 }}
         data={items}

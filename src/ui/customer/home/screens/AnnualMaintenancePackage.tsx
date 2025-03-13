@@ -103,6 +103,7 @@ export const AnnualMaintenancePackage = ({ item }) => {
         <FlatList
           contentContainerStyle={{ paddingHorizontal: 16 }}
           scrollEnabled={false}
+          removeClippedSubviews={false} // <- Add This
           ItemSeparatorComponent={() => <View style={{ margin: 8 }}></View>}
           renderItem={({ item, index }) => (
             <AnnualMaintenanceComp

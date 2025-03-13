@@ -5,11 +5,18 @@ import FontFamilty from "../../../../constants/FontFamilty";
 import { AppImages } from "../../../../constants/AppImages";
 import { CustomLargeTextInput } from "../../../../components/CustomLargeTextInput";
 
-export const CustomRequirements = ({ navigation }) => {
+export const CustomRequirements = ({ navigation,updateServiceData }) => {
   const [description, setDescription] = useState("");
   const handleImagesSelected = (images) => {
     console.log("Selected Images:", images);
   };
+
+  const descriptionUpdated=(text)=>{
+    console.log(text);
+    
+    setDescription(text)
+    updateServiceData('Description',text)
+  }
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -22,7 +29,7 @@ export const CustomRequirements = ({ navigation }) => {
             placeholder={"Type Description"}
             multiline={true}
             text={description}
-            setText={setDescription}
+            setText={(text)=>{descriptionUpdated(text)}}
           />
         </View>
 

@@ -14,9 +14,14 @@ import { useState } from "react";
 import { ProfileOptionComp } from "../components/ProfileOptionComp";
 import { AppImages } from "../../../../constants/AppImages";
 import { useDispatch } from "react-redux";
-import { authActions } from "../../../../redux/slices/authSlice";
+import { setisLoggedin } from "../../../../redux/AppReducer";
+import { useSelector } from "react-redux";
 
 export const ProfileScreen = ({ navigation }) => {
+  const selector = useSelector(state => state.AppReducer);
+  const user=selector.user
+  console.log(user);
+  
   const dispatch = useDispatch();
   const [profileOptions, setProfileOptions] = useState([
     {
@@ -27,14 +32,14 @@ export const ProfileScreen = ({ navigation }) => {
         navigateEditProfile();
       },
     },
-    {
-      id: 2,
-      name: "Card Information",
-      img: AppImages.payment,
-      onPress: () => {
-        navigateCardInformation();
-      },
-    },
+    // {
+    //   id: 2,
+    //   name: "Card Information",
+    //   img: AppImages.payment,
+    //   onPress: () => {
+    //     navigateCardInformation();
+    //   },
+    // },
     {
       id: 3,
       name: "Saved Addresses",
@@ -56,15 +61,15 @@ export const ProfileScreen = ({ navigation }) => {
   };
 
   const logout = () => {
-    dispatch(authActions.setIsLoggedIn(false));
+    dispatch(setisLoggedin(false));
   };
   return (
     <View style={styles.container}>
       <ProfileHeader
-        heading={"Profile"}
+        heading={'Profile'}
         navigation={navigation}
         profile={SampleImages.user}
-        name={"Asim Mehmood"}
+        name={user.displayName}
         img={SampleImages.user}
       />
 
@@ -79,9 +84,12 @@ export const ProfileScreen = ({ navigation }) => {
           Account
         </Text>
         <FlatList
+                  removeClippedSubviews={false} // <- Add This
           style={{ flex: 1 }}
           renderItem={({ item, index }) => <ProfileOptionComp item={item} />}
           data={profileOptions}
+          removeClippedSubviews={false} // <- Add This
+
         />
         <TouchableOpacity
           activeOpacity={0.9}

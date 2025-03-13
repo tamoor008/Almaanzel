@@ -40,5 +40,6 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.textInputbg,
     borderColor: AppColors.borderGrey,
     borderWidth: 1,
+    paddingTop:8,
   },
 });

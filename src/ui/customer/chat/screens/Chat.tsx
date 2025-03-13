@@ -47,6 +47,7 @@ export const Chat = ({ navigation }) => {
       <FlatList
         data={messages}
         inverted
+        removeClippedSubviews={false} // <- Add This
         ItemSeparatorComponent={() => <View style={{ margin: 8 }}></View>}
         contentContainerStyle={{ paddingHorizontal: 16 }}
         renderItem={({ item, index }) => <MessageComp item={item} />}

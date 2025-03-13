@@ -1,0 +1,57 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/Fonts/Inter-Black.otf",
+      "sha1": "68c456410eebd937a6496fff66d71311c8e844f7"
+    },
+    {
+      "path": "src/assets/Fonts/Inter-BlackItalic.otf",
+      "sha1": "cf06030ff6708282c674fb6047b9723b127c41e9"
+    },
+    {
+      "path": "src/assets/Fonts/Inter-Bold.otf",
+      "sha1": "c376b59a48facc029b9a384cc86f02992b2171ea"
+    },
+    {
+      "path": "src/assets/Fonts/Inter-BoldItalic.otf",
+      "sha1": "e565afbf6c3c06bb50da31475f98784cf391e9a8"
+    },
+    {
+      "path": "src/assets/Fonts/Inter-ExtraBold.otf",
+      "sha1": "2c724cc7236610e53e2060fd57b86c410889538d"
+    },
+    {
+      "path": "src/assets/Fonts/Inter-ExtraBoldItalic.otf",
+      "sha1": "ca9b0143218b83936b50c8990da23c5c1cf009bf"
+    },
+    {
+      "path": "src/assets/Fonts/Inter-ExtraLightItalic-BETA.otf",
+      "sha1": "4e768f410f340a7d35018396882e821412d9d087"
+    },
+    {
+      "path": "src/assets/Fonts/Inter-Italic.otf",
+      "sha1": "38db56ca1d9e726b5c6db786a8c53010e252c9f5"
+    },
+    {
+      "path": "src/assets/Fonts/Inter-Medium.otf",
+      "sha1": "699375c590a1879bde1b53a7949b2659292ee3b0"
+    },
+    {
+      "path": "src/assets/Fonts/Inter-MediumItalic.otf",
+      "sha1": "4ed021c1f5d9af1b5600770082e1d9d8b47cf38c"
+    },
+    {
+      "path": "src/assets/Fonts/Inter-Regular.otf",
+      "sha1": "efd846697930d88ab013b64d4e0f2129cd7e971f"
+    },
+    {
+      "path": "src/assets/Fonts/Inter-SemiBold.otf",
+      "sha1": "ff17bae635a4bffbaa773aa18ef3cfd8d6f41a17"
+    },
+    {
+      "path": "src/assets/Fonts/Inter-SemiBoldItalic.otf",
+      "sha1": "7b1e47b951753a7ae241b7f6b05c9e9f41f0fced"
+    }
+  ]
+}

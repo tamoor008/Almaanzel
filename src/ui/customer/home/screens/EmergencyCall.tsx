@@ -1,14 +1,23 @@
 import { StyleSheet, View, Text, Image, ScrollView } from "react-native";
 import { AppColors } from "../../../../constants/AppColors";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Description } from "../components/Description";
 import FontFamilty from "../../../../constants/FontFamilty";
 import { CustomLargeTextInput } from "../../../../components/CustomLargeTextInput";
 
-export const EmergencyCall = ({ item }) => {
+export const EmergencyCall = ({  item, setPrice, updateServiceDetails }) => {
   const scrollViewRef = useRef(null);
 
   const [issue, setIssue] = useState("");
+  
+  const helpUpdate=(text)=>{
+    updateServiceDetails("addon", [text]);
+    setIssue(text)
+  }
+
+  useEffect(()=>{
+  })
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -33,7 +42,7 @@ export const EmergencyCall = ({ item }) => {
             placeholder={"Type your issue"}
             multiline={true}
             text={issue}
-            setText={setIssue}
+            setText={helpUpdate}
           />
         </View>
       </ScrollView>

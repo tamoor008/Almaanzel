@@ -46,11 +46,11 @@ export const Bookings = ({ navigation }) => {
   };
 
   const [upcomingBookings, setUpcomingBookings] = useState([
-  
+
   ]);
 
   const [pastBookings, setPastBookings] = useState([
- 
+
   ]);
 
   const fetchData = async () => {
@@ -93,7 +93,7 @@ export const Bookings = ({ navigation }) => {
 
   useEffect(() => {
     fetchData()
-  },[tabs])
+  }, [tabs])
   return (
     <View style={styles.container}>
       <Header
@@ -145,33 +145,46 @@ export const Bookings = ({ navigation }) => {
             color={AppColors.mainBlue}></ActivityIndicator>
         </View>
         :
-        <ScrollView showsVerticalScrollIndicator={false} style={{}}>
+        <ScrollView contentContainerStyle={{ flex: 1 }} showsVerticalScrollIndicator={false} style={{marginTop:16}}>
 
 
           {tabs[0].selected && (
-            <FlatList
-              contentContainerStyle={{ padding: 16 }}
-              style={{ flex: 1 }}
-              removeClippedSubviews={false} // <- Add This
-              scrollEnabled={false}
-              ItemSeparatorComponent={() => <View style={{ margin: 8 }}></View>}
-              renderItem={({ item, index }) => (
-                <UpcomingBookingComp navigation={navigation} item={item} />
-              )}
-              data={upcomingBookings}
-            />
+            <View style={{ flex: 1,}}>
+              {upcomingBookings?.length > 0 ?
+                <FlatList
+                  contentContainerStyle={{ padding: 16 }}
+                  style={{ flex: 1 }}
+                  removeClippedSubviews={false} // <- Add This
+                  scrollEnabled={false}
+                  ItemSeparatorComponent={() => <View style={{ margin: 8 }}></View>}
+                  renderItem={({ item, index }) => (
+                    <UpcomingBookingComp key={index} navigation={navigation} item={item} />
+                  )}
+                  data={upcomingBookings}
+                /> :
+                <View style={{ flex: 1, backgroundColor: AppColors.white, justifyContent: 'center', alignItems: 'center' }}>
+                  <Text style={{ fontFamily: FontFamilty.bold, fontSize: 16, color: AppColors.mainBlue, textAlign: 'center' }}>There are no Upcoming Appointments</Text>
+                </View>}
+            </View>
           )}
 
           {tabs[1].selected && (
-            <FlatList
-              contentContainerStyle={{ padding: 16 }}
-              style={{ flex: 1 }}
-              removeClippedSubviews={false} // <- Add This
-              ItemSeparatorComponent={() => <View style={{ margin: 8 }}></View>}
-              scrollEnabled={false}
-              renderItem={({ item, index }) => <PastBookingComp navigation={navigation} item={item} />}
-              data={pastBookings}
-            />
+            <View style={{ flex: 1, }}>
+              {pastBookings?.length > 0 ?
+
+                <FlatList
+                  contentContainerStyle={{ padding: 16 }}
+                  style={{ flex: 1 }}
+                  removeClippedSubviews={false} // <- Add This
+                  ItemSeparatorComponent={() => <View style={{ margin: 8 }}></View>}
+                  scrollEnabled={false}
+                  renderItem={({ item, index }) => <PastBookingComp key={index} navigation={navigation} item={item} />}
+                  data={pastBookings}
+                /> :
+                <View style={{ flex: 1, backgroundColor: AppColors.white, justifyContent: 'center', alignItems: 'center' }}>
+                  <Text style={{ fontFamily: FontFamilty.bold, fontSize: 16, color: AppColors.mainBlue, textAlign: 'center' }}>There are no Past Appointments</Text>
+                </View>}
+            </View>
           )}
         </ScrollView>}
     </View>

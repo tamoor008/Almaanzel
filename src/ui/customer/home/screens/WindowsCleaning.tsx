@@ -1,16 +1,18 @@
 import { StyleSheet, View, Text, Image, ScrollView } from "react-native";
 import { AppColors } from "../../../../constants/AppColors";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Description } from "../components/Description";
 import FontFamilty from "../../../../constants/FontFamilty";
 import { CustomLargeTextInput } from "../../../../components/CustomLargeTextInput";
 import { CustomInputBaseComp } from "../components/CustomInputBaseComp";
 
-export const WindowsCleaning = ({ item }) => {
+export const WindowsCleaning = ({  item, setPrice, updateServiceDetails }) => {
   const scrollViewRef = useRef(null);
 
-  const [issue, setIssue] = useState("");
-  const [WindowsCleaning, setWindowsCleaning] = useState('')
+  useEffect(()=>{
+    updateServiceDetails('addon', ['AED 130 / Sq Meter']);
+  },[])
+
   return (
     <View style={styles.container}>
       <ScrollView

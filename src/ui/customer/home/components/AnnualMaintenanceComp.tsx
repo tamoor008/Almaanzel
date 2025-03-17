@@ -76,7 +76,7 @@ export const AnnualMaintenanceComp = ({
               ...styles.priceText,
               color: item.selected ? AppColors.white : AppColors.mainBlue,
             }}>
-            {item.price}
+            {'AED '}{item.price}
           </Text>
         </View>
       </View>

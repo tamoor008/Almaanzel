@@ -48,11 +48,13 @@ export const UpcomingBookingComp = ({ item, navigation }) => {
           )}
           <Text style={styles.headingText}>{item?.serviceType}</Text>
         </View>
+        {item?.details?.timeSlot && (
+          <View>
+            <Text style={styles.descriptionText}>{"Time"}</Text>
+            <Text style={styles.headingText}>{mergeTimeSlots(item?.details?.timeSlot ? item?.details?.timeSlot : '')}</Text>
+          </View>
+        )}
 
-        <View>
-          <Text style={styles.descriptionText}>{"Time"}</Text>
-          <Text style={styles.headingText}>{mergeTimeSlots(item?.details?.timeSlot?item?.details?.timeSlot:'')}</Text>
-        </View>
 
         <View
           style={{
@@ -60,11 +62,11 @@ export const UpcomingBookingComp = ({ item, navigation }) => {
             alignItems: "center",
             columnGap: 8,
             marginTop: 8,
-            flexWrap:'wrap',
-            rowGap:8,
-            width:'65%'
+            flexWrap: 'wrap',
+            rowGap: 8,
+            width: '60%'
           }}>
-          {dataArray.map((item ) => 
+          {dataArray.map((item) =>
 
             <View
               style={{
@@ -80,7 +82,7 @@ export const UpcomingBookingComp = ({ item, navigation }) => {
             </View>
           )}
 
-        
+
         </View>
       </View>
 
@@ -116,17 +118,23 @@ export const UpcomingBookingComp = ({ item, navigation }) => {
             // backgroundColor:'red',
             rowGap: 8
           }}>
-          <View style={{ alignItems: 'center' }}>
-            <Text style={styles.dateTextDim}>{day}</Text>
-            <Text style={styles.dateText}>{month}</Text>
-            <Text style={styles.dateTextDim}>{year}</Text>
+          {item.details.Date && (
+            <View style={{ alignItems: 'center' }}>
+              <Text style={styles.dateTextDim}>{day}</Text>
+              <Text style={styles.dateText}>{month}</Text>
+              <Text style={styles.dateTextDim}>{year}</Text>
+            </View>
+          )}
 
-          </View>
-          {item?.price && (
+          {item?.price ? (
             <Text style={styles.dateText}>
               {'AED ' + item?.price}
             </Text>
-          )}
+          ) :
+            <Text style={styles.dateText}>
+              {'Quotation'}
+            </Text>
+          }
 
         </View>
       </View>

@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, View } from "react-native";
+import { Alert, Text, Linking, StyleSheet, View, FlatList, TouchableOpacity } from "react-native";
 import { AppColors } from "../../../../constants/AppColors";
 import { SampleImages } from "../../../../constants/SampleImages";
 import { Header } from "../../home/components/Header";
@@ -6,6 +6,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import React, { useState } from "react";
 import { ChatFooter } from "../components/ChatFooter";
 import { MessageComp } from "../components/MessageComp";
+import FontFamilty from "../../../../constants/FontFamilty";
 
 export const Chat = ({ navigation }) => {
   const [message, setMessage] = useState("");
@@ -37,6 +38,21 @@ export const Chat = ({ navigation }) => {
       ...prevMessages, // Keep previous messages
     ]);
   };
+
+  const openWhatsApp = () => {
+    let phoneNumber = '+971509819899'; // WhatsApp number
+    let url = `https://wa.me/${phoneNumber}`; // WhatsApp URL scheme
+
+    Linking.canOpenURL(url)
+      .then((supported) => {
+        if (supported) {
+          Linking.openURL(url);
+        } else {
+          Alert.alert('Error', 'WhatsApp is not installed on this device');
+        }
+      })
+      .catch((err) => console.error('An error occurred', err));
+  };
   return (
     <View style={styles.container}>
       <Header
@@ -44,7 +60,14 @@ export const Chat = ({ navigation }) => {
         navigation={navigation}
         profile={SampleImages.user}
       />
-      <FlatList
+
+      <View style={{ flex: 1, justifyContent: 'center' }}>
+        <TouchableOpacity onPress={openWhatsApp} style={{ backgroundColor: '#25D366', borderRadius: 16, margin: 16, padding: 16, width: '50%', alignSelf: 'center', alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{ color: AppColors.white, fontFamily: FontFamilty.medium }}>Chat on Whatsapp</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* <FlatList
         data={messages}
         inverted
         removeClippedSubviews={false} // <- Add This
@@ -57,7 +80,7 @@ export const Chat = ({ navigation }) => {
         sendMessage={sendMessage}
         text={message}
         setText={setMessage}
-      />
+      /> */}
     </View>
   );
 };

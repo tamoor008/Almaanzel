@@ -41,13 +41,15 @@ export const StoreHeader = ({ heading, profile, navigation, back }) => {
         <Text style={{ ...styles.headingText, flex: 1 }}>{"Hey Asim"}</Text>
       )}
 
-      <TouchableOpacity activeOpacity={0.9} onPress={navigateCart}>
+      {/* <TouchableOpacity activeOpacity={0.9} onPress={navigateCart}> */}
+      <TouchableOpacity activeOpacity={0.9} onPress={()=>{}}>
+
         <Image
           resizeMode="contain"
           style={styles.imgStyle}
           source={AppImages.store}
         />
-        <View
+        {/* <View
           style={{
             borderRadius: 100,
             height: 16,
@@ -67,7 +69,7 @@ export const StoreHeader = ({ heading, profile, navigation, back }) => {
             }}>
             2
           </Text>
-        </View>
+        </View> */}
       </TouchableOpacity>
     </View>
   );

@@ -102,15 +102,15 @@ export const ServiceDetails = ({ navigation }) => {
       case "GardenPackages":
         return <GardenPackages setPrice={setPrice} updateServiceDetails={updateServiceData} item={item}/>;
       case "AcServicePackages":
-        return <AcServicePackages {...commonProps} />;
+        return <AcServicePackages setPrice={setPrice} updateServiceDetails={updateServiceData} item={item}/>;
       case "EmergencyCall":
-        return <EmergencyCall {...commonProps} />;
+        return <EmergencyCall setPrice={setPrice} updateServiceDetails={updateServiceData} item={item} />;
       case "WindowsCleaning":
-        return <WindowsCleaning {...commonProps} />;
+        return <WindowsCleaning setPrice={setPrice} updateServiceDetails={updateServiceData} item={item} />;
       case "HomeSoftWork":
-        return <HomeSoftWork {...commonProps} />;
+        return <HomeSoftWork setPrice={setPrice} updateServiceDetails={updateServiceData} item={item} />;
       case "AnnualMaintenancePackage":
-        return <AnnualMaintenancePackage {...commonProps} />;
+        return <AnnualMaintenancePackage setPrice={setPrice} updateServiceDetails={updateServiceData} item={item} />;
       default:
         return <View style={{ flex: 1 }}></View>;
     }

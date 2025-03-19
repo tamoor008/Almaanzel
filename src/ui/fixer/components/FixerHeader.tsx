@@ -6,12 +6,12 @@ import {
   TouchableOpacity,
   StatusBar,
 } from "react-native";
-import { AppColors } from "../../../../constants/AppColors";
-import { CustomButton } from "../../../../components/CustomButton";
-import FontFamilty from "../../../../constants/FontFamilty";
-import { AppImages } from "../../../../constants/AppImages";
+import { AppColors } from "../../../constants/AppColors";
+import { AppImages } from "../../../constants/AppImages";
+import FontFamilty from "../../../constants/FontFamilty";
 
-export const Header = ({ heading, profile, navigation, back }) => {
+
+export const FixerHeader = ({ heading, navigation, logout }) => {
   const menuPress = () => {
     navigation.openDrawer();
   };
@@ -26,26 +26,20 @@ export const Header = ({ heading, profile, navigation, back }) => {
       <StatusBar
         backgroundColor={AppColors.white}
         barStyle="dark-content"></StatusBar>
-      {back ? (
-        <TouchableOpacity onPress={onBackPress} activeOpacity={0.9}>
-          <Image style={{ width: 20, height: 20 }} source={AppImages.backwl} />
-        </TouchableOpacity>
-      ) : (
-        <TouchableOpacity onPress={menuPress} activeOpacity={0.9}>
-          <Image style={{ width: 20, height: 20 }} source={AppImages.menu} />
-        </TouchableOpacity>
-      )}
+  
 
       {heading ? (
         <Text style={styles.headingText}>{heading}</Text>
       ) : (
-        <Text style={{ ...styles.headingText, flex: 1 }}>{"Welcome Back"}</Text>
+        <Text style={{ ...styles.headingText, color:AppColors.black}}>{"Fixer Dashboard"}</Text>
       )}
-      {profile && (
-        <TouchableOpacity activeOpacity={0.9} onPress={navigateProfile}>
-          <Image style={styles.imgStyle} source={profile} />
-        </TouchableOpacity>
-      )}
+
+
+{logout&&(
+  <TouchableOpacity activeOpacity={0.9} onPress={logout} style={{position:'absolute',right:16}}>
+    <Image style={{width:24,height:24}} source={AppImages.logout}/>
+  </TouchableOpacity>
+)}
 
     </View>
   );

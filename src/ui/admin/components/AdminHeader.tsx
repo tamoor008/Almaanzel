@@ -11,7 +11,7 @@ import { AppImages } from "../../../constants/AppImages";
 import FontFamilty from "../../../constants/FontFamilty";
 
 
-export const AdminHeader = ({ heading, profile, navigation, back }) => {
+export const AdminHeader = ({ heading, navigation, logout }) => {
   const menuPress = () => {
     navigation.openDrawer();
   };
@@ -34,6 +34,12 @@ export const AdminHeader = ({ heading, profile, navigation, back }) => {
         <Text style={{ ...styles.headingText, color:AppColors.black}}>{"Almaanzel - Admin Panel"}</Text>
       )}
 
+
+{logout&&(
+  <TouchableOpacity activeOpacity={0.9} onPress={logout} style={{position:'absolute',right:16}}>
+    <Image style={{width:24,height:24}} source={AppImages.logout}/>
+  </TouchableOpacity>
+)}
 
     </View>
   );

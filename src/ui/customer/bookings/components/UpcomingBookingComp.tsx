@@ -66,7 +66,7 @@ export const UpcomingBookingComp = ({ item, navigation }) => {
             rowGap: 8,
             width: '60%'
           }}>
-          {dataArray.map((item) =>
+          {dataArray.map((item,index) =>
 
             <View
               style={{
@@ -78,7 +78,7 @@ export const UpcomingBookingComp = ({ item, navigation }) => {
 
                 alignItems: "center",
               }}>
-              <Text style={styles.labelText}>{item.value}</Text>
+              <Text key={index} style={styles.labelText}>{item.value}</Text>
             </View>
           )}
 

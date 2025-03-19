@@ -7,15 +7,17 @@ import { useEffect, useState } from "react";
 import FontFamilty from "../../../constants/FontFamilty";
 import database from "@react-native-firebase/database"; // Firebase Realtime Database
 import moment from "moment";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AppImages } from "../../../constants/AppImages";
 import { FixerComp } from "../components/FixerComp";
 import { useIsFocused } from "@react-navigation/native";
+import { setisLoggedin } from "../../../redux/AppReducer";
 
 export const AdminHomeScreen = ({ navigation }) => {
   const selector = useSelector(state => state.AppReducer);
   const user = selector.user
   const userId = user.uid
+  const dispatch=useDispatch()
 
   const [unassignedBookings, setUnassignedBookings] = useState([])
   const [assignedBookings, setAssignedBookings] = useState([])
@@ -107,9 +109,13 @@ export const AdminHomeScreen = ({ navigation }) => {
     fetchFixers()
   }, [useIsFocused()])
 
+  const logout=()=>{
+    dispatch(setisLoggedin(false))
+  }
+
   return (
     <View style={styles.container}>
-      <AdminHeader navigation={navigation} />
+      <AdminHeader logout={logout} navigation={navigation} />
       <ScrollView>
 
         <Text style={{ fontFamily: FontFamilty.bold, fontSize: 16, color: AppColors.black, marginHorizontal: 16, marginTop: 16 }}>{'Bookings'}</Text>
@@ -141,7 +147,6 @@ export const AdminHomeScreen = ({ navigation }) => {
 
         <FlatList removeClippedSubviews={false} // <- Add This
           scrollEnabled={false} ItemSeparatorComponent={() => <View style={{ marginVertical: 8 }}></View>} contentContainerStyle={{ padding: 16 }} data={fixers} renderItem={({ item, index }) => <FixerComp item={item} />} />
-        
       </ScrollView>
       <TouchableOpacity activeOpacity={0.9} onPress={() => { navigation.navigate('Addfixer') }} style={{ width: 75, height: 75, borderRadius: 1000, position: 'absolute', right: 32, bottom: 32 }}>
         <Image style={{ width: 75, height: 75 }} source={AppImages.plusIcon} />

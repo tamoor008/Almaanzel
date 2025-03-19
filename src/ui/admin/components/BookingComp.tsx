@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Image } from "react-native";
+import { StyleSheet, View, Text, Image, Alert } from "react-native";
 
 import Icon from "react-native-vector-icons/FontAwesome";
 import moment from "moment";
@@ -11,6 +11,8 @@ import database from "@react-native-firebase/database"; // Firebase Realtime Dat
 import { FixerComp } from "./FixerComp";
 
 export const BookingComp = ({ item, navigation, fixers }) => {
+  const [fixer, setFixer] = useState()
+
   const mergeTimeSlots = (slots) => {
     if (!slots?.length) return "";
 
@@ -40,40 +42,59 @@ export const BookingComp = ({ item, navigation, fixers }) => {
   const dataArray = Object.entries(item.details.addon).map(([key, value]) => ({ key, value }));
 
   const [modalVisible, setModalVisible] = useState(false);
-  const handleFixerSelect = (fixerId) => {
+  const handleFixerSelect = async (fixerId) => {
     console.log("Selected Fixer:", fixerId);
-    console.log("item item:", item.userId);
-    updateServiceStatus(item.userId, item.displayId, fixerId)
-    addServiceFixer(fixerId, item.displayId)
+    console.log("Item:", item?.userId);
+  
+    if (!item || !item.userId || !item.displayId) {
+      console.error("Item data is missing:", item);
+      return;
+    }
+  
+    try {
+      // Update service status in the database
+      await updateServiceStatus(item.userId, item.displayId, fixerId);
+  
+      // Update item locally before adding to fixer's services
+      const updatedItem = { ...item, status: "assigned", fixerId };
+  
+      // Add updated service item to fixer
+      await addServiceFixer(fixerId, item.displayId, updatedItem);
+  
+      navigation.goBack();
+    } catch (error) {
+      console.error("Error updating fixer:", error);
+      Alert.alert("Error", "Failed to update service status. Please try again.");
+    }
   };
-
-
-  const [fixer, setFixer] = useState()
-
+  
   const updateServiceStatus = async (userId, displayId, fixerId) => {
     try {
       await database()
         .ref(`/serviceRequests/${userId}/${displayId}`)
-        .update({ status: "assigned", fixerId: fixerId });
-
+        .update({ status: "assigned", fixerId });
+  
       console.log("Service status updated to assigned");
-      navigation.goBack()
     } catch (error) {
       console.error("Error updating service status:", error);
+      throw error; // Propagate error
     }
   };
-
-  const addServiceFixer = async (fixerId, displayId) => {
+  
+  const addServiceFixer = async (fixerId, displayId, updatedItem) => {
     try {
       await database()
-        .ref(`/users/${fixerId}/services`).child(displayId)
-        .set(item);
-
-      console.log("Service status updated to assigned");
+        .ref(`/users/${fixerId}/services`)
+        .child(displayId)
+        .set(updatedItem);
+  
+      console.log("Fixer added to service with updated status");
     } catch (error) {
-      console.error("Error updating service status:", error);
+      console.error("Error adding fixer:", error);
+      throw error; // Ensure error bubbles up
     }
   };
+  
 
   const fetchFixerById = async (fixerId) => {
     try {

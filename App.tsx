@@ -7,6 +7,7 @@ import { AppColors } from "./src/constants/AppColors";
 import AuthNav from "./src/navigation/AuthNav";
 import DrawerNav from "./src/navigation/DrawerNav";
 import AdminNav from "./src/navigation/AdminNav";
+import FixerNav from "./src/navigation/FixerNav";
 
 export default function App() {
   const selector = useSelector(state => state.AppReducer);
@@ -17,7 +18,7 @@ export default function App() {
       <StatusBar barStyle="dark-content" backgroundColor={AppColors.white} />
       <SafeAreaView style={{ flex: 1 }}>
         <NavigationContainer>
-          {selector.isLoggedIn ? selector?.user?.userType=='admin'?<AdminNav/>: <DrawerNav /> : <AuthNav />}
+          {selector.isLoggedIn ? selector?.user?.userType=='admin'?<AdminNav/>:selector?.user?.userType=='fixer'?<FixerNav/>: <DrawerNav /> : <AuthNav />}
         </NavigationContainer>
       </SafeAreaView>
     </View>

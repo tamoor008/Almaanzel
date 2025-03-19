@@ -15,4 +15,5 @@ export const AppColors = {
   red: "#FF4A4A",
   red30: "#FF4A4A30",
   greystar: "#E3E5E5",
+  green:'#25D366'
 };

@@ -20,7 +20,7 @@ import database from '@react-native-firebase/database';
 export const Register = ({ navigation }) => {
   const reference = database().ref('/users/');
   const dispatch = useDispatch();
-  const [email, setEmail] = useState("tamoormalik088@gmail.com");
+  const [email, setEmail] = useState("test@email.com");
   const [password, setPassword] = useState("11111111");
   const [passwordStrengthIndex, setpasswordStrengthIndex] = useState(0);
   const [loader, setLoader] = useState(false);
@@ -63,6 +63,7 @@ export const Register = ({ navigation }) => {
             phoneNumber: user.phoneNumber || '',
             photoURL: user.photoURL || '',
             providerId: user.providerId,
+            userType:'client'
           };
   
           reference

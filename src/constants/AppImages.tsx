@@ -33,4 +33,6 @@ export const AppImages = {
   search: require("../assets/Icons/search.png"),
   support: require("../assets/Icons/support.png"),
   triangle: require("../assets/Icons/triangle.png"),
+  cross: require("../assets/Icons/cross.png"),
+
 };

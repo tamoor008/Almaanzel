@@ -35,7 +35,7 @@ export const ServiceDetails = ({ navigation }) => {
     displayId:'123123',
     serviceType: item.heading,
     userId: userId,
-    status: 'Upcoming',
+    status: 'unassigned',
     price:price,
     details: {},
   });
@@ -78,17 +78,23 @@ export const ServiceDetails = ({ navigation }) => {
 
   // ✅ Function to handle service submission
   const submitServiceRequest = async () => {
-    console.log('final service data', serviceData);
-
+    console.log('Final service data:', serviceData);
+  
     try {
-      await database()
-        .ref(`/serviceRequests/${userId}`)
-        .push(serviceData);
+      const newServiceRef = database().ref(`/serviceRequests/${userId}`).push();
+      const newServiceKey = newServiceRef.key; // Get the generated key
+  
+      await newServiceRef.set({
+        ...serviceData,
+        displayId: newServiceKey, // Store the key in displayId
+      });
+  
       setSuccessModalVisible(true);
     } catch (error) {
       console.log("Error submitting service request:", error.message);
     }
   };
+  
 
   // ✅ Function to render the correct component based on service type
   const renderComponent = (key) => {

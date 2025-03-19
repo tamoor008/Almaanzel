@@ -62,7 +62,7 @@ export const Chat = ({ navigation }) => {
       />
 
       <View style={{ flex: 1, justifyContent: 'center' }}>
-        <TouchableOpacity onPress={openWhatsApp} style={{ backgroundColor: '#25D366', borderRadius: 16, margin: 16, padding: 16, width: '50%', alignSelf: 'center', alignItems: 'center', justifyContent: 'center' }}>
+        <TouchableOpacity onPress={openWhatsApp} style={{ backgroundColor:AppColors.green, borderRadius: 16, margin: 16, padding: 16, width: '50%', alignSelf: 'center', alignItems: 'center', justifyContent: 'center' }}>
           <Text style={{ color: AppColors.white, fontFamily: FontFamilty.medium }}>Chat on Whatsapp</Text>
         </TouchableOpacity>
       </View>

@@ -122,8 +122,8 @@ export const HomeScreen = ({ navigation }) => {
     },
   ];
 
-  const navigatetoReviews = () => {
-    navigation.navigate("Reviews");
+  const navigatetoReviews = (item) => {
+    navigation.navigate("Reviews",{serviceType:item.heading});
   };
   return (
     <View style={styles.container}>

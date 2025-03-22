@@ -82,7 +82,7 @@ const BtmNav = () => {
           name="Chat"
           component={Chat}
         />
-        <Tab.Screen
+        {/* <Tab.Screen
           options={{
             tabBarLabel: "Store",
             tabBarIcon: ({ focused }) => (
@@ -98,7 +98,7 @@ const BtmNav = () => {
           }}
           name="StoreNav"
           component={StoreNav}
-        />
+        /> */}
       </Tab.Navigator>
     </View>
   );

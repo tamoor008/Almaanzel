@@ -2,13 +2,18 @@ import { StyleSheet, Text, View } from "react-native";
 import { AppColors } from "../../../../constants/AppColors";
 import FontFamilty from "../../../../constants/FontFamilty";
 import Icon from "react-native-vector-icons/FontAwesome";
+import moment from "moment";
 
 export const ReviewsComp = ({ item }) => {
+  console.log('item',item);
+  
   return (
     <View style={styles.container}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <Text style={styles.headingText}>{item.title}</Text>
-        <Text style={styles.dateText}>{item.date}</Text>
+        <Text style={styles.headingText}>{item.serviceType}</Text>
+        <Text style={styles.dateText}>
+        {moment(item.timestamp).format('DD MMM YYYY')}
+        </Text>
       </View>
       <View style={{ flexDirection: "row", columnGap: 4 }}>
         {Array.from({ length: 5 }).map((_, index) => (

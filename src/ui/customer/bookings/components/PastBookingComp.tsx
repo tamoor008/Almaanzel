@@ -49,12 +49,10 @@ export const PastBookingComp = ({ item ,navigation,fetchData}) => {
 
   const onSubmitFeedback = async (data) => {
     await updateServiceStatus(item.userId, item.displayId,data);
-
-    // Update item locally before adding to fixer's services
     const updatedItem = { ...item,review:data };
-
-    // Add updated service item to fixer
     await addServiceFixer(item.fixerId, item.displayId, updatedItem);
+    await addReview(item.serviceType, data);
+
     fetchData()
   }
 
@@ -84,6 +82,22 @@ export const PastBookingComp = ({ item ,navigation,fetchData}) => {
     } catch (error) {
       console.log("Error adding fixer:", error);
       throw error; // Ensure error bubbles up
+    }
+  };
+
+  const addReview = async (serviceType,data) => {
+
+    
+
+    try {
+      await database()
+        .ref(`/reviews/${serviceType}`)
+        .push({review:data.review,rating:data.rating,serviceType:serviceType,timestamp:moment().valueOf()});
+
+      console.log("Review Data updated to assigned");
+    } catch (error) {
+      console.error("Error updating service status:", error);
+      throw error; // Propagate error
     }
   };
 

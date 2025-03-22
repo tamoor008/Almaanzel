@@ -59,7 +59,7 @@ export const ServiceComp = ({ item, navigatetoReviews }) => {
         </View>
       </View>
 
-      <TouchableOpacity onPress={navigatetoReviews} style={styles.reviewStyle}>
+      <TouchableOpacity onPress={()=>navigatetoReviews(item)} style={styles.reviewStyle}>
         <Text style={styles.reviewText}>See all Reviews</Text>
       </TouchableOpacity>
     </TouchableOpacity>

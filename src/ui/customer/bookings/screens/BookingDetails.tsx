@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Image, ScrollView, Alert, Linking } from "react-native";
 import { AppColors } from "../../../../constants/AppColors";
 import { SampleImages } from "../../../../constants/SampleImages";
 import { Header } from "../../home/components/Header";
@@ -12,6 +12,8 @@ import RatingModal from "../../../fixer/components/RatingModal";
 import { useState } from "react";
 import ConfirmModal from "../../../fixer/components/ConfirmModal";
 import CancelModal from "../../../fixer/components/CancelModal";
+import { BookingDetailUiComp } from "../components/BookingdetailUIComp";
+import { AppImages } from "../../../../constants/AppImages";
 
 export const BookingDetails = ({ navigation }) => {
   const selector = useSelector(state => state.AppReducer);
@@ -22,6 +24,7 @@ export const BookingDetails = ({ navigation }) => {
   const [reason, setReason] = useState("");
 
   const { item } = route.params
+  const dataArray = Object.entries(item.details.addon).map(([key, value]) => ({ key, value }));
 
 
 
@@ -59,10 +62,10 @@ export const BookingDetails = ({ navigation }) => {
   const { month, day, year } = formatDate(item.details.Date);
 
   const onConfirm = async () => {
-    await updateServiceStatus(item.userId, item.displayId, fixerId, 'completed','');
+    await updateServiceStatus(item.userId, item.displayId, fixerId, 'completed', '');
 
     // Update item locally before adding to fixer's services
-    const updatedItem = { ...item, status: "completed", fixerId: fixerId,reason:'' };
+    const updatedItem = { ...item, status: "completed", fixerId: fixerId, reason: '' };
 
     // Add updated service item to fixer
     await addServiceFixer(fixerId, item.displayId, updatedItem);
@@ -71,10 +74,10 @@ export const BookingDetails = ({ navigation }) => {
   }
 
   const onCancel = async () => {
-    await updateServiceStatus(item.userId, item.displayId, fixerId, 'cancelled',reason);
+    await updateServiceStatus(item.userId, item.displayId, fixerId, 'cancelled', reason);
 
     // Update item locally before adding to fixer's services
-    const updatedItem = { ...item, status: "cancelled", fixerId: fixerId,reason:reason };
+    const updatedItem = { ...item, status: "cancelled", fixerId: fixerId, reason: reason };
 
     // Add updated service item to fixer
     await addServiceFixer(fixerId, item.displayId, updatedItem);
@@ -82,11 +85,11 @@ export const BookingDetails = ({ navigation }) => {
     navigation.goBack()
   }
 
-  const updateServiceStatus = async (userId, displayId, fixerId, status,reason) => {
+  const updateServiceStatus = async (userId, displayId, fixerId, status, reason) => {
     try {
       await database()
         .ref(`/serviceRequests/${userId}/${displayId}`)
-        .update({ status: status, fixerId: fixerId ,reason:reason});
+        .update({ status: status, fixerId: fixerId, reason: reason });
 
       console.log("Service status updated to assigned");
     } catch (error) {
@@ -111,6 +114,41 @@ export const BookingDetails = ({ navigation }) => {
     }
   };
 
+  const bookingDetailItem = {
+    title: item.serviceType,
+    description: 'Job Type',
+    icon: AppImages.jobtype
+  }
+
+
+  const paymentMethod = {
+    title: item.details.selectedPayment.label,
+    description: 'Payment Method',
+    icon: AppImages.jobtype
+  }
+
+
+  const price = {
+    title: 'AED ' + item.price,
+    description: 'Price',
+    icon: AppImages.jobtype
+  }
+
+  const openWhatsApp = () => {
+    let phoneNumber = '+971509819899'; // WhatsApp number
+    let url = `https://wa.me/${phoneNumber}`; // WhatsApp URL scheme
+
+    Linking.canOpenURL(url)
+      .then((supported) => {
+        if (supported) {
+          Linking.openURL(url);
+        } else {
+          Alert.alert('Error', 'WhatsApp is not installed on this device');
+        }
+      })
+      .catch((err) => console.error('An error occurred', err));
+  };
+
   return (
     <View style={styles.container}>
       <Header
@@ -119,27 +157,108 @@ export const BookingDetails = ({ navigation }) => {
         // profile={SampleImages.user}
         back={true}
       />
-      <View style={{ alignItems: 'center', justifyContent: 'center', rowGap: 8, flex: 1 }}>
-        <Text style={styles.dateText}>{day + ' ' + month + ' ' + year + '-' + mergeTimeSlots(item?.details?.timeSlot)}</Text>
-        <View
-          style={{
-            borderRadius: 100,
-            backgroundColor:
-              item.status == "Cancelled" ? AppColors.red : AppColors.mainBlue,
-            paddingHorizontal: 12,
-            paddingVertical: 4,
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            width: '50%'
-          }}>
-          <Text style={styles.labelText}>{item.status}</Text>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 32, paddingTop: 16 }}>
+        <View style={{ alignItems: 'center', rowGap: 16, flex: 1 }}>
+
+          <View style={{ alignItems: 'center', width: '100%', rowGap: 8 }}>
+            <Text style={styles.dateText}>{day + ' ' + month + ' ' + year + '-' + mergeTimeSlots(item?.details?.timeSlot)}</Text>
+            <View
+              style={{
+                borderRadius: 100,
+                backgroundColor:
+                  item.status == "Cancelled" ? AppColors.red : AppColors.mainBlue,
+                paddingHorizontal: 12,
+                paddingVertical: 4,
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                width: '50%'
+              }}>
+              <Text style={styles.labelText}>{item.status}</Text>
+            </View>
+          </View>
+
+          <View style={{ width: '100%', backgroundColor: AppColors.white, padding: 16, rowGap: 8,elevation:10 }}>
+            <Text style={{ ...styles.dateText, textAlign: 'left', color: AppColors.black, fontSize: 16 }}>Booking Details</Text>
+            <BookingDetailUiComp item={bookingDetailItem} />
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                columnGap: 8,
+                marginTop: 8,
+                flexWrap: 'wrap',
+                rowGap: 8,
+                width: '100%',
+              }}>
+              {dataArray.map((item, index) =>
+
+                <View
+                  key={index}
+                  style={{
+                    borderRadius: 100,
+                    backgroundColor: AppColors.mainBlue,
+                    paddingHorizontal: 12,
+                    paddingVertical: 4,
+                    flexDirection: "row",
+
+                    alignItems: "center",
+                  }}>
+                  <Text key={index} style={styles.labelText2}>{item.value}</Text>
+                </View>
+              )}
+
+
+            </View>
+
+          </View>
+
+          <View style={{ width: '100%', backgroundColor: AppColors.white, padding: 16, rowGap: 8,elevation:10 }}>
+            <Text style={{ ...styles.dateText, textAlign: 'left', color: AppColors.black, fontSize: 16 }}>Special Instructions</Text>
+            {item.details.description && (
+              <View style={{ rowGap: 4 }}>
+                <Text style={{ ...styles.desText }}>Description</Text>
+                <Text style={{ ...styles.dateText, textAlign: 'left', color: AppColors.black, fontSize: 14, fontFamily: FontFamilty.medium }}>{item.details.description}</Text>
+              </View>
+            )}
+
+            <View style={{ rowGap: 4 }}>
+              <Text style={{ ...styles.desText }}>Images</Text>
+              <View style={{ flexDirection: 'row', columnGap: 8 }}>
+                <Image style={{ width: 75, height: 75, borderRadius: 8, }} source={SampleImages.product1} />
+                <Image style={{ width: 75, height: 75, borderRadius: 8, }} source={SampleImages.service4} />
+
+              </View>
+            </View>
+
+
+
+          </View>
+
+          <View style={{ width: '100%', backgroundColor: AppColors.white, padding: 16, rowGap: 8,elevation:10 }}>
+            <Text style={{ ...styles.dateText, textAlign: 'left', color: AppColors.black, fontSize: 16 }}>Payment Information</Text>
+            <BookingDetailUiComp item={paymentMethod} />
+            <BookingDetailUiComp item={price} />
+
+
+
+
+          </View>
         </View>
-      </View>
+      </ScrollView>
+
+
       {user?.userType != 'client' && item.status == 'assigned' && (
         <View style={{ elevation: 10, backgroundColor: AppColors.white, flexDirection: 'row', padding: 16, columnGap: 16 }}>
-          <CustomButton onPress={()=>setCancelModalVisible(true)} btnTextStyle={{ color: AppColors.red }} text={'Cancel'} btnStyle={{ flex: 1, width: '0%', borderWidth: 2, backgroundColor: AppColors.white, borderColor: AppColors.red }}></CustomButton>
+          <CustomButton onPress={() => setCancelModalVisible(true)} btnTextStyle={{ color: AppColors.red }} text={'Cancel'} btnStyle={{ flex: 1, width: '0%', borderWidth: 2, backgroundColor: AppColors.white, borderColor: AppColors.red }}></CustomButton>
           <CustomButton onPress={() => { setModalVisible(true) }} text={'Complete'} btnStyle={{ flex: 1, width: '0%', backgroundColor: AppColors.mainBlue }}></CustomButton>
+        </View>
+      )}
+
+      {user?.userType == 'client' && (
+        <View style={{ elevation: 10, backgroundColor: AppColors.white, flexDirection: 'row', padding: 16, columnGap: 16 }}>
+          {/* <CustomButton onPress={() => setCancelModalVisible(true)} btnTextStyle={{ color: AppColors.red }} text={'Cancel'} btnStyle={{ flex: 1, width: '0%', borderWidth: 2, backgroundColor: AppColors.white, borderColor: AppColors.red }}></CustomButton> */}
+          <CustomButton btnTextStyle={{color:AppColors.mainBlue}} onPress={() => { openWhatsApp() }} text={'Contact Support'} btnStyle={{ flex: 1, width: '0%', backgroundColor: AppColors.white,borderWidth:2,borderColor:AppColors.mainBlue }}></CustomButton>
         </View>
       )}
 
@@ -150,8 +269,8 @@ export const BookingDetails = ({ navigation }) => {
       />
 
       <CancelModal
-      reason={reason}
-      setReason={setReason}
+        reason={reason}
+        setReason={setReason}
         isVisible={cancelModalVisible}
         onCancel={() => setCancelModalVisible(false)}
         onConfirm={onCancel}
@@ -164,8 +283,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     borderRadius: 8,
-    rowGap: 8,
-    backgroundColor: AppColors.grey
+    backgroundColor: AppColors.greybg
   },
   descriptionText: {
     fontSize: 10,
@@ -182,6 +300,11 @@ const styles = StyleSheet.create({
     fontFamily: FontFamilty.bold,
     color: AppColors.white,
   },
+  labelText2: {
+    fontSize: 12,
+    fontFamily: FontFamilty.regular,
+    color: AppColors.white,
+  },
   dateText: {
     fontSize: 16,
     fontFamily: FontFamilty.bold,
@@ -193,5 +316,10 @@ const styles = StyleSheet.create({
     fontFamily: FontFamilty.medium,
     color: AppColors.black50,
     textAlign: "right",
+  },
+  desText: {
+    fontFamily: FontFamilty.regular,
+    fontSize: 10,
+    color: AppColors.text8181,
   },
 });

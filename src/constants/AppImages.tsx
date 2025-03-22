@@ -35,4 +35,13 @@ export const AppImages = {
   triangle: require("../assets/Icons/triangle.png"),
   cross: require("../assets/Icons/cross.png"),
 
+  jobtype: require("../assets/Icons/jobtype.png"),
+  material: require("../assets/Icons/material.png"),
+  paymentMehod: require("../assets/Icons/paymentmethod.png"),
+  persons: require("../assets/Icons/persons.png"),
+  price: require("../assets/Icons/price.png"),
+
+  logo: require("../assets/Icons/logo.jpeg"),
+
+
 };

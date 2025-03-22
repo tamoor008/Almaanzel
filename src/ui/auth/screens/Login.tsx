@@ -124,11 +124,11 @@ export const Login = ({ navigation }) => {
                   </Text>
                 )}
 
-                <Text
+                {/* <Text
                   onPress={navigateForgotPassword}
                   style={styles.forgotPasswordText}>
                   Forgot Password?
-                </Text>
+                </Text> */}
               </View>
             </View>
           </View>

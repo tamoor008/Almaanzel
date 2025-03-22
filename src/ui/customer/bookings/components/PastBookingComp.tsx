@@ -1,11 +1,20 @@
-import { StyleSheet, View, Text, Image } from "react-native";
+import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import { AppColors } from "../../../../constants/AppColors";
 import FontFamilty from "../../../../constants/FontFamilty";
 import { AppImages } from "../../../../constants/AppImages";
 import Icon from "react-native-vector-icons/FontAwesome";
 import moment from "moment";
+import { useState } from "react";
+import RatingModal from "../../../fixer/components/RatingModal";
+import { useSelector } from "react-redux";
+import database from "@react-native-firebase/database"; // Firebase Realtime Database
 
-export const PastBookingComp = ({ item ,navigation}) => {
+export const PastBookingComp = ({ item ,navigation,fetchData}) => {
+  const selector = useSelector(state => state.AppReducer);
+  const user = selector.user
+  console.log(user);
+  
+  const [modalVisible,setModalVisible]=useState(false)
   const mergeTimeSlots = (slots) => {
     if (!slots?.length) return "";
 
@@ -33,9 +42,53 @@ export const PastBookingComp = ({ item ,navigation}) => {
 
   const { month, day, year } = formatDate(item.details.Date);
 
+  const [rating,setRating]=useState(5)
+  const [review,setReview]=useState('')
+
+
+
+  const onSubmitFeedback = async (data) => {
+    await updateServiceStatus(item.userId, item.displayId,data);
+
+    // Update item locally before adding to fixer's services
+    const updatedItem = { ...item,review:data };
+
+    // Add updated service item to fixer
+    await addServiceFixer(item.fixerId, item.displayId, updatedItem);
+    fetchData()
+  }
+
+  const updateServiceStatus = async (userId, displayId,data) => {
+    try {
+      await database()
+        .ref(`/serviceRequests/${userId}/${displayId}`)
+        .update({review:data});
+
+      console.log("Service status updated to assigned");
+    } catch (error) {
+      console.error("Error updating service status:", error);
+      throw error; // Propagate error
+    }
+  };
+
+  const addServiceFixer = async (fixerId, displayId, updatedItem) => {
+
+
+    try {
+      await database()
+        .ref(`/users/${fixerId}/services`)
+        .child(displayId)
+        .set(updatedItem);
+
+      console.log("Fixer added to service with updated status");
+    } catch (error) {
+      console.log("Error adding fixer:", error);
+      throw error; // Ensure error bubbles up
+    }
+  };
 
   return (
-    <View style={{ elevation: 10, backgroundColor: AppColors.white, borderRadius: 16, flexDirection: 'row' }}>
+    <TouchableOpacity onPress={() => navigation.navigate('BookingDetails', { item: item })} activeOpacity={0.9} style={{ elevation: 10, backgroundColor: AppColors.white, borderRadius: 16,flexDirection:'row' }}>
       <View style={styles.container}>
         <View>
           {item?.displayId && (
@@ -49,7 +102,7 @@ export const PastBookingComp = ({ item ,navigation}) => {
           <Text style={styles.headingText}>{mergeTimeSlots(item?.details?.timeSlot)}</Text>
         </View>
 
-        {item.status == 'Completed' ?
+        {item.status == 'Completed'||item.status=='completed' ?
           <View
             style={{
               flexDirection: "row",
@@ -74,7 +127,11 @@ export const PastBookingComp = ({ item ,navigation}) => {
 
             ) : (
               <View style={{ marginTop: 8 }}>
-                <Text style={{ ...styles.headingText, color: AppColors.mainBlue }}>{'write a review'}</Text>
+                {user.userType=='client'?
+                <Text onPress={()=>setModalVisible(true)} style={{ ...styles.headingText, color: AppColors.mainBlue }}>{'write a review'}</Text>
+                :
+                <Text  style={{ ...styles.headingText, color: AppColors.mainBlue }}>{'No feedback yet'}</Text>
+                }
               </View>
             )}
           </View> :
@@ -102,7 +159,9 @@ export const PastBookingComp = ({ item ,navigation}) => {
           style={{
             borderRadius: 100,
             backgroundColor:
-              item.status == "Completed" ? AppColors.mainBlue : AppColors.red,
+            item.status === "Completed" || item.status === "completed" 
+            ? AppColors.mainBlue 
+            : AppColors.red,
             paddingHorizontal: 12,
             paddingVertical: 4,
             flexDirection: "row",
@@ -136,7 +195,8 @@ export const PastBookingComp = ({ item ,navigation}) => {
 
         </View>
       </View>
-    </View>
+      <RatingModal onSubmit={(data)=>{onSubmitFeedback(data)}} onClose={()=>setModalVisible(false)} isVisible={modalVisible} setRating={setRating} setReview={setReview} rating={rating} review={review}/>
+    </TouchableOpacity>
   );
 };
 

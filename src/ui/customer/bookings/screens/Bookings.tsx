@@ -35,6 +35,7 @@ export const Bookings = ({ navigation }) => {
       selected: false,
     },
   ]);
+
   const toggleTabsByIndex = (index) => {
     setTabs((prevOptions) =>
       prevOptions.map((option, i) =>
@@ -46,11 +47,9 @@ export const Bookings = ({ navigation }) => {
   };
 
   const [upcomingBookings, setUpcomingBookings] = useState([
-
   ]);
 
   const [pastBookings, setPastBookings] = useState([
-
   ]);
 
   const fetchData = async () => {
@@ -70,7 +69,7 @@ export const Bookings = ({ navigation }) => {
         Object.values(rawData).forEach(item => {
           const bookingDate = moment(item.details.Date).format("YYYY-MM-DD");
 
-          if (bookingDate >= today) {
+          if (bookingDate >= today&&item.status=='assigned'||item.status=='unassigned') {
             upcoming.push(item);
           } else {
             past.push(item);
@@ -94,6 +93,10 @@ export const Bookings = ({ navigation }) => {
   useEffect(() => {
     fetchData()
   }, [tabs])
+
+
+
+
   return (
     <View style={styles.container}>
       <Header
@@ -178,7 +181,7 @@ export const Bookings = ({ navigation }) => {
                   removeClippedSubviews={false} // <- Add This
                   ItemSeparatorComponent={() => <View style={{ margin: 8 }}></View>}
                   scrollEnabled={false}
-                  renderItem={({ item, index }) => <PastBookingComp key={index} navigation={navigation} item={item} />}
+                  renderItem={({ item, index }) => <PastBookingComp key={index} navigation={navigation} item={item} fetchData={fetchData} />}
                   data={pastBookings}
                 /> :
                 <View style={{ flex: 1, backgroundColor: AppColors.white, justifyContent: 'center', alignItems: 'center' }}>

@@ -54,30 +54,23 @@ export const FixerHomeScreen = ({ navigation }) => {
     setLoader(true);
     try {
       const snapshot = await database().ref('/users').child(userId).child('services').once('value');
-      console.log(snapshot);
       
-
       if (snapshot.exists()) {
         const rawData = snapshot.val();
-        console.log('Raw Data:', rawData);
-
         const today = moment().format("YYYY-MM-DD");
-
         const upcoming = [];
         const past = [];
 
         Object.values(rawData).forEach(item => {
           const bookingDate = moment(item?.details?.Date).format("YYYY-MM-DD");
 
-          if (bookingDate >= today) {
+          if (bookingDate >= today&&item?.status=='assigned') {
             upcoming.push(item);
           } else {
             past.push(item);
           }
         });
 
-        console.log('upcoming',upcoming);
-        console.log('past',past);
 
         setUpcomingBookings(upcoming);
         setPastBookings(past);
@@ -94,8 +87,18 @@ export const FixerHomeScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
+    console.log('TABS RUN');
+    
     fetchData()
   }, [tabs])
+
+
+  useEffect(() => {
+    console.log('FOCUS RUN');
+
+    fetchData()
+
+  }, [useIsFocused()])
 
   const logout=()=>{
     dispatch(setisLoggedin(false))

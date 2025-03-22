@@ -8,14 +8,18 @@ import moment from "moment";
 import { CustomButton } from "../../../../components/CustomButton";
 import { useSelector } from "react-redux";
 import database from "@react-native-firebase/database"; // Firebase Realtime Database
+import RatingModal from "../../../fixer/components/RatingModal";
+import { useState } from "react";
+import ConfirmModal from "../../../fixer/components/ConfirmModal";
+import CancelModal from "../../../fixer/components/CancelModal";
 
 export const BookingDetails = ({ navigation }) => {
   const selector = useSelector(state => state.AppReducer);
   const route = useRoute()
   const user = selector.user
   console.log(user);
-  const fixerId=user.uid
-
+  const fixerId = user.uid
+  const [reason, setReason] = useState("");
 
   const { item } = route.params
 
@@ -37,6 +41,10 @@ export const BookingDetails = ({ navigation }) => {
     return `${startTime}-${endTime}`;
   };
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [cancelModalVisible, setCancelModalVisible] = useState(false);
+
+
   const formatDate = (dateString) => {
     const date = moment(dateString);
 
@@ -49,55 +57,53 @@ export const BookingDetails = ({ navigation }) => {
 
 
   const { month, day, year } = formatDate(item.details.Date);
-  
-  const onConfirm=async ()=>{
-    await updateServiceStatus(item.userId, item.displayId, fixerId,'completed');
-  
+
+  const onConfirm = async () => {
+    await updateServiceStatus(item.userId, item.displayId, fixerId, 'completed','');
+
     // Update item locally before adding to fixer's services
-    const updatedItem = { ...item, status: "completed", fixerId:fixerId };
+    const updatedItem = { ...item, status: "completed", fixerId: fixerId,reason:'' };
 
     // Add updated service item to fixer
     await addServiceFixer(fixerId, item.displayId, updatedItem);
+    setModalVisible(false)
+    navigation.goBack()
   }
 
-  const onCancel=async ()=>{
-    await updateServiceStatus(item.userId, item.displayId, fixerId,'cancelled');
-  
+  const onCancel = async () => {
+    await updateServiceStatus(item.userId, item.displayId, fixerId, 'cancelled',reason);
+
     // Update item locally before adding to fixer's services
-    const updatedItem = { ...item, status: "cancelled", fixerId:fixerId };
+    const updatedItem = { ...item, status: "cancelled", fixerId: fixerId,reason:reason };
 
     // Add updated service item to fixer
     await addServiceFixer(fixerId, item.displayId, updatedItem);
+    setCancelModalVisible(false)
+    navigation.goBack()
   }
 
-
-
-  
-  const updateServiceStatus = async (userId, displayId, fixerId,status) => {
+  const updateServiceStatus = async (userId, displayId, fixerId, status,reason) => {
     try {
       await database()
         .ref(`/serviceRequests/${userId}/${displayId}`)
-        .update({ status: status, fixerId:fixerId });
-  
+        .update({ status: status, fixerId: fixerId ,reason:reason});
+
       console.log("Service status updated to assigned");
     } catch (error) {
       console.error("Error updating service status:", error);
       throw error; // Propagate error
     }
   };
-  
-  const addServiceFixer = async (fixerId, displayId, updatedItem) => {
-    console.log('fixerId',fixerId);
-    console.log('displayId',displayId);
-    console.log('updatedItem',updatedItem);
 
-    
+  const addServiceFixer = async (fixerId, displayId, updatedItem) => {
+
+
     try {
       await database()
         .ref(`/users/${fixerId}/services`)
         .child(displayId)
         .set(updatedItem);
-  
+
       console.log("Fixer added to service with updated status");
     } catch (error) {
       console.log("Error adding fixer:", error);
@@ -130,13 +136,26 @@ export const BookingDetails = ({ navigation }) => {
           <Text style={styles.labelText}>{item.status}</Text>
         </View>
       </View>
-      {user?.userType != 'client' && (
+      {user?.userType != 'client' && item.status == 'assigned' && (
         <View style={{ elevation: 10, backgroundColor: AppColors.white, flexDirection: 'row', padding: 16, columnGap: 16 }}>
-          <CustomButton onPress={onCancel} btnTextStyle={{ color: AppColors.red }} text={'Cancel'} btnStyle={{ flex: 1, width: '0%', borderWidth: 2, backgroundColor: AppColors.white, borderColor: AppColors.red }}></CustomButton>
-          <CustomButton onPress={onConfirm} text={'Complete'} btnStyle={{ flex: 1, width: '0%', backgroundColor: AppColors.mainBlue }}></CustomButton>
+          <CustomButton onPress={()=>setCancelModalVisible(true)} btnTextStyle={{ color: AppColors.red }} text={'Cancel'} btnStyle={{ flex: 1, width: '0%', borderWidth: 2, backgroundColor: AppColors.white, borderColor: AppColors.red }}></CustomButton>
+          <CustomButton onPress={() => { setModalVisible(true) }} text={'Complete'} btnStyle={{ flex: 1, width: '0%', backgroundColor: AppColors.mainBlue }}></CustomButton>
         </View>
       )}
 
+      <ConfirmModal
+        isVisible={modalVisible}
+        onCancel={() => setModalVisible(false)}
+        onConfirm={onConfirm}
+      />
+
+      <CancelModal
+      reason={reason}
+      setReason={setReason}
+        isVisible={cancelModalVisible}
+        onCancel={() => setCancelModalVisible(false)}
+        onConfirm={onCancel}
+      />
     </View>
   );
 };

@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: FontFamilty.semibold,
     color: AppColors.black,
+    flex:1
   },
   descriptionText: {
     fontSize: 16,

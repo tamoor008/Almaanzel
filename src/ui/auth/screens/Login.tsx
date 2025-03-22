@@ -20,10 +20,10 @@ import database from '@react-native-firebase/database';
 export const Login = ({ navigation }) => {
   const reference = database().ref('/users/');
   const dispatch = useDispatch();
-  // const [email, setEmail] = useState("tamoormalik088@gmail.com");
+  const [email, setEmail] = useState("tamoormalik088@gmail.com");
   //   const [email, setEmail] = useState("test@email.com");
   // const [password, setPassword] = useState("11111111");
-      const [email, setEmail] = useState("fixer@email.com");
+      // const [email, setEmail] = useState("fixer@email.com");
   const [password, setPassword] = useState("11111111");
   // const [email, setEmail] = useState("mohaned.admin@almaanzel.com");
   // const [password, setPassword] = useState("mohaned.admin@almaanzel.com");

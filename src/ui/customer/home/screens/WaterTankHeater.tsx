@@ -25,23 +25,39 @@ export const WaterTankHeater = ({ item, updateServiceDetails, setPrice }) => {
     },
     {
       label: "Under Ground",
-      price:100,
+      price:1300,
       selected: false,
       description:
         "The Price of ON-GROUND water tank replacement is quotation base. Our agent will visit your location and will give you the exact price according to your required size.",
+    },
+  ]);
+
+  const [waterLevelOptions, setWaterLevelOptions] = useState([
+    {
+      label: "Floor Level",
+      selected: true,
+      price:0,
+
+    },
+    {
+      label: "Roof Level",
+      price:250,
+      selected: false,
+      description:
+        "Roof Level Tank Cleaning includes the Roof Cleaning and Drainage Flushing which will cost you AED 250",
     },
   ]);
   const [waterHeaterOptions, setWaterHeaterOptions] = useState([
     {
       label: "Repair",
       selected: true,
-      price:200,
+      price:0,
 
     },
     {
       label: "Full Change",
       selected: false,
-      price:400,
+      price:0,
 
     },
   ]);
@@ -49,12 +65,12 @@ export const WaterTankHeater = ({ item, updateServiceDetails, setPrice }) => {
   const [onGroundOption, setOnGroundOptions] = useState([
     {
       label: "Less than 1000 Gallon",
-      price:200,
+      price:800,
       selected: true,
     },
     {
       label: "More than 1000 Gallon",
-      price:400,
+      price:1100,
       selected: false,
     },
   ]);
@@ -62,7 +78,7 @@ export const WaterTankHeater = ({ item, updateServiceDetails, setPrice }) => {
   const [tabs, setTabs] = useState([
     {
       label: "Water Tank Cleaning",
-      selected: false,
+      selected: true,
       price:0,
 
     },
@@ -74,7 +90,7 @@ export const WaterTankHeater = ({ item, updateServiceDetails, setPrice }) => {
     },
     {
       label: "Water Heater",
-      selected: true,
+      selected: false,
       price:0,
 
     },
@@ -109,6 +125,10 @@ export const WaterTankHeater = ({ item, updateServiceDetails, setPrice }) => {
       .filter((option) => option.selected)
       .map((option) => ({ label: option.label, price: option.price || 0 }));
   
+    let selectedWaterLevel = waterLevelOptions
+      .filter((option) => option.selected)
+      .map((option) => ({ label: option.label, price: option.price || 0 }));
+  
     let selectedOptions = { serviceCategory: selectedTab };
     let totalPrice = 0;
   
@@ -133,6 +153,12 @@ export const WaterTankHeater = ({ item, updateServiceDetails, setPrice }) => {
       totalPrice = 0; // Since the price is determined by an agent
     }
   
+    // Add selected water level option
+    if (selectedWaterLevel.length) {
+      selectedOptions.waterLevel = selectedWaterLevel[0].label;
+      totalPrice += selectedWaterLevel[0].price;
+    }
+  
     // Remove null values
     Object.keys(selectedOptions).forEach((key) => {
       if (!selectedOptions[key]) delete selectedOptions[key];
@@ -153,7 +179,7 @@ export const WaterTankHeater = ({ item, updateServiceDetails, setPrice }) => {
   // Run updateSelectedOptions when any option changes
   useEffect(() => {
     updateSelectedOptions();
-  }, [waterTankCleaningOption, waterHeaterOptions, onGroundOption,tabs]);
+  }, [waterTankCleaningOption, waterHeaterOptions, onGroundOption,tabs,waterLevelOptions]);
 
   return (
     <View style={styles.container}>
@@ -220,6 +246,14 @@ export const WaterTankHeater = ({ item, updateServiceDetails, setPrice }) => {
                 heading={"Select the type of water tank you want us to Clean"}
               />
               {waterTankCleaningOption[0].selected && (
+                <View style={{rowGap:16}}>
+                <OptionBaseComp
+                options={waterLevelOptions}
+                setOptions={setWaterLevelOptions}
+                heading={
+                  "Select the Ground Level of your Tank"
+                }
+              />
                 <OptionBaseComp
                   options={onGroundOption}
                   setOptions={setOnGroundOptions}
@@ -227,6 +261,7 @@ export const WaterTankHeater = ({ item, updateServiceDetails, setPrice }) => {
                     "Select the approximate size of your water tank to get the estimated cost."
                   }
                 />
+                </View>
               )}
             </View>
           )}

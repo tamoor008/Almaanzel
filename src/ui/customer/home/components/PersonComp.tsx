@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { AppColors } from "../../../../constants/AppColors";
 import FontFamilty from "../../../../constants/FontFamilty";
 import { AppImages } from "../../../../constants/AppImages";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
 import { CustomTextInput } from "../../../../components/CustomTextInput";
 
@@ -10,14 +10,14 @@ export const PersonComp = ({ item, removePerson, index, updatePerson }) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(item.personType || null); // Set initial value
   const [items, setItems] = useState([
-    { label: "Handy Man (AED 14/hr)", value: "Handy Man (AED 14/hr)" },
-    { label: "Electrician (AED 14/hr)", value: "Electrician (AED 14/hr)" },
-    { label: "Plumber (AED 14/hr)", value: "Plumber (AED 14/hr)" },
+    { label: "Handy Man (AED 125/hr)", value: "Handy Man (AED 125/hr)" },
+    { label: "Electrician (AED 165/hr)", value: "Electrician (AED 165/hr)" },
+    { label: "Plumber (AED 145/hr)", value: "Plumber (AED 145/hr)" },
   ]);
 
   const [hours, setHours] = useState(item.hours || 0);
   const [hourOption, setHourOption] = useState([
-    { label: "1 Hour", value: 1, selected: true },
+    { label: "1 Hour", value: 1, selected: false },
     { label: "4 Hours", value: 4, selected: false },
     { label: "Full Day", value: 8, selected: false },
     { label: "Custom", value: "custom", selected: false },
@@ -37,6 +37,10 @@ export const PersonComp = ({ item, removePerson, index, updatePerson }) => {
       updatePerson(index, "hours", selectedOption.value);
     }
   };
+
+  useEffect(()=>{
+    updatePerson()
+  },[])
 
   return (
     <View style={styles.container}>
@@ -59,9 +63,15 @@ export const PersonComp = ({ item, removePerson, index, updatePerson }) => {
           value={value}
           items={items}
           setOpen={setOpen}
+          onChangeValue={(value)=>
+          updatePerson(index, "personType", value)
+          }
           setValue={(selectedValue) => {
+          
             setValue(selectedValue);
-            updatePerson(index, "personType", value); // Update in NeedHand
+            console.log('selectedValue',{selectedValue});
+            console.log('value',value);
+
           }}
           setItems={setItems}
           placeholder="Select Person"

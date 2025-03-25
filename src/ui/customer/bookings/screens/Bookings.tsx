@@ -148,7 +148,7 @@ export const Bookings = ({ navigation }) => {
             color={AppColors.mainBlue}></ActivityIndicator>
         </View>
         :
-        <ScrollView contentContainerStyle={{ flex: 1 }} showsVerticalScrollIndicator={false} style={{marginTop:16}}>
+        <ScrollView contentContainerStyle={{ }} showsVerticalScrollIndicator={false} style={{marginTop:16}}>
 
 
           {tabs[0].selected && (

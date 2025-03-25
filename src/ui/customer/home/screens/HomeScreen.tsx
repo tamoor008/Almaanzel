@@ -78,21 +78,21 @@ export const HomeScreen = ({ navigation }) => {
         });
       },
     },
-    {
-      id: 6,
-      type: "0",
-      img: SampleImages.service3,
-      heading: "Home Soft Work",
-      rating: "4.9",
-      price: "AED 450",
-      priceDescription: "Starting From / ",
-      onPress: (item) => {
-        navigation.navigate("ServiceDetails", {
-          type: "HomeSoftWork",
-          item: item,
-        });
-      },
-    },
+    // {
+    //   id: 6,
+    //   type: "0",
+    //   img: SampleImages.service3,
+    //   heading: "Home Soft Work",
+    //   rating: "4.9",
+    //   price: "AED 450",
+    //   priceDescription: "Starting From / ",
+    //   onPress: (item) => {
+    //     navigation.navigate("ServiceDetails", {
+    //       type: "HomeSoftWork",
+    //       item: item,
+    //     });
+    //   },
+    // },
     {
       id: 7,
       type: "0",

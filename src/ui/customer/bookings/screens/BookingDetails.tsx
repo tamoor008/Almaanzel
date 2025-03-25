@@ -30,16 +30,16 @@ export const BookingDetails = ({ navigation }) => {
 
 
   const mergeTimeSlots = (slots) => {
-    if (!slots.length) return "";
+    if (!slots?.length) return "";
 
     // Extract selected time slots
     const selectedSlots = slots.filter(slot => slot.selected);
 
-    if (selectedSlots.length === 0) return "";
+    if (selectedSlots?.length === 0) return "";
 
     // Extract start and end times
     const startTime = selectedSlots[0].time.split(" - ")[0];
-    const endTime = selectedSlots[selectedSlots.length - 1].time.split(" - ")[1];
+    const endTime = selectedSlots[selectedSlots?.length - 1].time.split(" - ")[1];
 
     return `${startTime}-${endTime}`;
   };
@@ -215,10 +215,10 @@ export const BookingDetails = ({ navigation }) => {
 
           <View style={{ width: '100%', backgroundColor: AppColors.white, padding: 16, rowGap: 8,elevation:10 }}>
             <Text style={{ ...styles.dateText, textAlign: 'left', color: AppColors.black, fontSize: 16 }}>Special Instructions</Text>
-            {item.details.description && (
+            {item.details.Description && (
               <View style={{ rowGap: 4 }}>
                 <Text style={{ ...styles.desText }}>Description</Text>
-                <Text style={{ ...styles.dateText, textAlign: 'left', color: AppColors.black, fontSize: 14, fontFamily: FontFamilty.medium }}>{item.details.description}</Text>
+                <Text style={{ ...styles.dateText, textAlign: 'left', color: AppColors.black, fontSize: 14, fontFamily: FontFamilty.medium }}>{item.details.Description}</Text>
               </View>
             )}
 

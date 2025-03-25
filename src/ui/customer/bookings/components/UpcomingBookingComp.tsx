@@ -69,6 +69,7 @@ export const UpcomingBookingComp = ({ item, navigation }) => {
           {dataArray.map((item,index) =>
 
             <View
+            key={index}
               style={{
                 borderRadius: 100,
                 backgroundColor: AppColors.mainBlue,

@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { ActivityIndicator, Alert, StyleSheet, View } from "react-native";
 import { AppColors } from "../../../../constants/AppColors";
 import { Header } from "../components/Header";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
@@ -22,6 +22,7 @@ import { useSelector } from "react-redux";
 
 export const ServiceDetails = ({ navigation }) => {
   const selector = useSelector(state => state.AppReducer);
+  const [loader, setLoader] = useState(false)
   const user = selector.user
   const userId = user.uid
   const router = useRoute();
@@ -32,21 +33,21 @@ export const ServiceDetails = ({ navigation }) => {
 
   // ✅ Centralized service data state
   const [serviceData, setServiceData] = useState({
-    displayId:'123123',
+    displayId: '123123',
     serviceType: item.heading,
     userId: userId,
     status: 'unassigned',
-    price:price,
+    price: price,
     details: {},
   });
 
   // ✅ Function to update service details dynamically
   const updateServiceData = (key, value) => {
-    console.log('serviceData',serviceData);
+    console.log('serviceData', serviceData);
 
     setServiceData((prevData) => ({
       ...prevData,
-      price:price,
+      price: price,
       details: {
         ...prevData.details,
         [key]: value,
@@ -79,22 +80,29 @@ export const ServiceDetails = ({ navigation }) => {
   // ✅ Function to handle service submission
   const submitServiceRequest = async () => {
     console.log('Final service data:', serviceData);
-  
+    setLoader(true)
+
     try {
       const newServiceRef = database().ref(`/serviceRequests/${userId}`).push();
       const newServiceKey = newServiceRef.key; // Get the generated key
-  
+
       await newServiceRef.set({
         ...serviceData,
         displayId: newServiceKey, // Store the key in displayId
       });
-  
+
       setSuccessModalVisible(true);
+      setLoader(false)
     } catch (error) {
       console.log("Error submitting service request:", error.message);
+      Alert.alert('Error', "There is some issue with the service, Kindly try again later.");
+      setLoader(false)
     }
   };
-  
+
+  const [addons, setAddons] = useState(false)
+  const [timeSlot, setTimeSlot] = useState(false)
+  const [addresspayment, setAddresspayment] = useState(false)
 
   // ✅ Function to render the correct component based on service type
   const renderComponent = (key) => {
@@ -102,13 +110,13 @@ export const ServiceDetails = ({ navigation }) => {
 
     switch (key) {
       case "NeedHand":
-        return <NeedHand setPrice={setPrice} updateServiceDetails={updateServiceData} item={item} />;
+        return <NeedHand setAddons={setAddons} addons={addons} setPrice={setPrice} updateServiceDetails={updateServiceData} item={item} />;
       case "watertank&services":
         return <WaterTankHeater setPrice={setPrice} updateServiceDetails={updateServiceData} item={item} />;
       case "GardenPackages":
-        return <GardenPackages setPrice={setPrice} updateServiceDetails={updateServiceData} item={item}/>;
+        return <GardenPackages setPrice={setPrice} updateServiceDetails={updateServiceData} item={item} />;
       case "AcServicePackages":
-        return <AcServicePackages setPrice={setPrice} updateServiceDetails={updateServiceData} item={item}/>;
+        return <AcServicePackages setPrice={setPrice} updateServiceDetails={updateServiceData} item={item} />;
       case "EmergencyCall":
         return <EmergencyCall setPrice={setPrice} updateServiceDetails={updateServiceData} item={item} />;
       case "WindowsCleaning":
@@ -128,13 +136,46 @@ export const ServiceDetails = ({ navigation }) => {
       <ProgressBar progress={progress} />
 
       {progress === 0.25 && renderComponent(type)}
-      {progress === 0.5 && <DateSelection type={type} updateServiceData={updateServiceData} />}
+      {progress === 0.5 && <DateSelection setTimeSlot={setTimeSlot} type={type} updateServiceData={updateServiceData} />}
       {progress === 0.75 && <CustomRequirements navigation={navigation} updateServiceData={updateServiceData} />}
-      {progress === 1 && <PaymentInformation navigation={navigation} updateServiceData={updateServiceData} />}
-
+      {progress === 1 && loader == false && <PaymentInformation setAddresspayment={setAddresspayment} navigation={navigation} updateServiceData={updateServiceData} />}
+      {loader && (
+        <View style={{ flex: 1, justifyContent: "center" }}>
+          <ActivityIndicator
+            size={"large"}
+            color={AppColors.mainBlue}></ActivityIndicator>
+        </View>
+      )}
       <ServicesFooter
+        btndisable={progress == 0.25 ? !addons : progress == 0.5 ? !timeSlot : progress == 1 ? !addresspayment : false}
+        btnStyle={{ backgroundColor: AppColors.green }}
         onPress={() => {
           setProgress((progress) => {
+            // Validation for progress at 0.25
+            if (progress === 0.25) {
+              if (!addons) {  // Custom function to check required data
+                Alert.alert('Error', "Select all the Options to proceed");
+                return progress;  // Do not increase progress
+              }
+            }
+
+            // // Validation for progress at 0.50
+            // if (progress === 0.50) {
+            //   if (!isValidStepTwoData()) {
+            //     Alert.alert("Incomplete Information", "Ensure all required details are filled before proceeding.");
+            //     return progress;
+            //   }
+            // }
+
+            // // Validation for progress at 0.75
+            // if (progress === 0.75) {
+            //   if (!isValidStepThreeData()) {
+            //     Alert.alert("Complete Previous Steps", "Some required fields are missing.");
+            //     return progress;
+            //   }
+            // }
+
+            // If progress reaches 1, submit the request
             if (progress < 1) {
               return progress + 0.25;
             } else {
@@ -143,6 +184,7 @@ export const ServiceDetails = ({ navigation }) => {
             }
           });
         }}
+
         price={price}
         priceDescription={item.footerDescription}
         btnText={"Next"}

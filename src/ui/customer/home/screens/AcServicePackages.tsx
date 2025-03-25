@@ -14,20 +14,30 @@ import { QoutationBaseComp } from "../components/QoutationBaseComp";
 import { OptionBaseComp } from "../components/OptionBaseComp";
 import { SingleOptionComp } from "../components/SingleOptionComp";
 import { CustomInputBaseComp } from "../components/CustomInputBaseComp";
+import { OptionBaseComp2 } from "../components/OptionBaseComp2";
 
 export const AcServicePackages = ({ item, setPrice, updateServiceDetails }) => {
   const scrollViewRef = useRef(null);
   const [numberOfDucts, setNumberOfDucts] = useState("1");
-  
+
   const [tabs, setTabs] = useState([
-    { label: "Split Type", selected: true, price: 150 },
-    { label: "Split / Duct System", selected: false, price: 250 },
-    { label: "Centralized AC", selected: false, price: 0 },
-    { label: "New AC Fixing (Split Type)", selected: false, price: 125 },
-    { label: "Duct Cleaning", selected: false, price: 10 },
-    { label: "AC Repair", selected: false, price: 0 },
-    { label: "Full AC Repair & Maintenance", selected: false, price: 600 },
+    // { label: "Split Type", selected: true, price: 150 },
+    { label: "AC Repair", selected: true, price: 0 },
+    { label: "AC Maintenance", selected: false, price: 0 },
+
+    // { label: "Split / Duct System", selected: false, price: 250 },
+    // { label: "Centralized AC", selected: false, price: 0 },
+    // { label: "New AC Fixing (Split Type)", selected: false, price: 125 },
+    // { label: "Duct Cleaning", selected: false, price: 10 },
+    // { label: "AC Repair", selected: false, price: 0 },
+    // { label: "Full AC Repair & Maintenance", selected: false, price: 600 },
   ]);
+
+  const [maintenanceOptions,setMaintenanceOptipns]=useState([
+    { label: "Preventive", selected: true, price: 150 },
+    { label: "Comprehensive", selected: false, price: 425,description:'Includes Internal and External Cleaning of Coil' },
+
+  ])
 
   const [splitType, setSplitType] = useState([
     {
@@ -45,30 +55,32 @@ export const AcServicePackages = ({ item, setPrice, updateServiceDetails }) => {
   };
 
   const updateSelectedOptions = () => {
+    console.log("FUNCTION RUN");
+    
     const selectedTab = tabs.find((tab) => tab.selected)?.label || null;
     let totalPrice = tabs.find((tab) => tab.selected)?.price || 0;
     let selectedOptions = { serviceCategory: selectedTab };
-
-    if (selectedTab === "Duct Cleaning") {
-      selectedOptions.numberOfDucts = `${numberOfDucts} Ducts`;
-      totalPrice += parseInt(numberOfDucts) * 10;
-    }
-
-    if (selectedTab === "Split Type") {
-      let selectedSplitOptions = splitType.filter(option => option.selected);
-      if (selectedSplitOptions.length) {
-        selectedOptions.additionalServices = selectedSplitOptions.map(option => option.label).join(", ");
-        totalPrice += selectedSplitOptions.reduce((sum, option) => sum + option.price, 0);
+  
+    // If "AC Maintenance" is selected, include maintenance options
+    if (selectedTab === "AC Maintenance") {
+      let selectedMaintenanceOption = maintenanceOptions.find((option) => option.selected);
+      if (selectedMaintenanceOption) {
+        selectedOptions.maintenance = selectedMaintenanceOption.label;
+        totalPrice += selectedMaintenanceOption.price;
       }
+      
+      updateServiceDetails("addon", selectedOptions);
+      setPrice(totalPrice);
+      return;
     }
-
+  
     updateServiceDetails("addon", selectedOptions);
     setPrice(totalPrice);
   };
 
   useEffect(() => {
     updateSelectedOptions();
-  }, [tabs, numberOfDucts, splitType]);
+  }, [tabs, numberOfDucts, splitType,maintenanceOptions]);
 
   return (
     <View style={styles.container}>
@@ -93,26 +105,38 @@ export const AcServicePackages = ({ item, setPrice, updateServiceDetails }) => {
               </TouchableOpacity>
             ))}
           </View>
-
           {tabs[0].selected && (
+            <QoutationBaseComp
+              description={"This package includes the Full AC Repair, our agent will visit your place and analyze the requirements according to that."}
+              heading={"Package Details"}
+            />
+          )}
+              {tabs[1].selected && (
+            <OptionBaseComp2
+            options={maintenanceOptions}
+            setOptions={setMaintenanceOptipns}
+            heading={"Select the type of maintenace you want."}
+          />
+          )}
+          {/* {tabs[0].selected && (
             <SingleOptionComp
               options={splitType}
               setOptions={setSplitType}
               description={"This package includes the whole cleaning service for your Split AC’s indoor and outdoor units. It includes the Filter and Gas for your AC"}
               heading={"Package Details"}
             />
-          )}
+          )} */}
 
-          {tabs[4].selected && (
+          {tabs[4]?.selected && (
             <View style={{ rowGap: 16 }}>
               <QoutationBaseComp heading={"Package Details"} description={"Our agent will help you clean your ducts for smooth air flow."} />
               <CustomInputBaseComp heading={"Choose the number of Ducts you want us to clean."} text={numberOfDucts} setText={setNumberOfDucts} />
             </View>
           )}
 
-          {tabs.slice(1, 4).concat(tabs.slice(5)).some(tab => tab.selected) && (
+          {/* {tabs.slice(1, 4).concat(tabs.slice(5)).some(tab => tab.selected) && (
             <QoutationBaseComp heading={"Package Details"} description={"Service details will be provided upon agent inspection."} />
-          )}
+          )} */}
         </View>
       </ScrollView>
     </View>

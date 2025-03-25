@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Image, ScrollView } from "react-native";
+import { StyleSheet, View, Text, Image, ScrollView, TouchableOpacity, Linking, Alert } from "react-native";
 import { AppColors } from "../../../../constants/AppColors";
 import React, { useEffect, useRef, useState } from "react";
 import { Description } from "../components/Description";
@@ -18,6 +18,20 @@ export const EmergencyCall = ({  item, setPrice, updateServiceDetails }) => {
   useEffect(()=>{
   })
 
+  const openWhatsApp = () => {
+    let phoneNumber = '+971509819899'; // WhatsApp number
+    let url = `https://wa.me/${phoneNumber}`; // WhatsApp URL scheme
+
+    Linking.canOpenURL(url)
+      .then((supported) => {
+        if (supported) {
+          Linking.openURL(url);
+        } else {
+          Alert.alert('Error', 'WhatsApp is not installed on this device');
+        }
+      })
+      .catch((err) => console.error('An error occurred', err));
+  };
   return (
     <View style={styles.container}>
       <ScrollView
@@ -46,6 +60,9 @@ export const EmergencyCall = ({  item, setPrice, updateServiceDetails }) => {
           />
         </View>
       </ScrollView>
+      <TouchableOpacity onPress={openWhatsApp} style={{ backgroundColor:AppColors.green, borderRadius: 16, margin: 16, padding: 16, width: '80%', alignSelf: 'center', alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{ color: AppColors.white, fontFamily: FontFamilty.medium }}>Anyy Questions? Give us a Call</Text>
+        </TouchableOpacity>
     </View>
   );
 };

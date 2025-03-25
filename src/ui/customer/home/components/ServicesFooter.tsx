@@ -8,6 +8,8 @@ export const ServicesFooter = ({
   priceDescription,
   btnText,
   onPress,
+  btnStyle,
+  btndisable
 }) => {
   return (
     <View style={styles.container}>
@@ -21,7 +23,7 @@ export const ServicesFooter = ({
      </View>
       }
       <View style={{ width: "50%" }}>
-        <CustomButton text={btnText} onPress={onPress} />
+        <CustomButton disable={btndisable} btnStyle={btnStyle} text={btnText} onPress={onPress} />
       </View>
     </View>
   );

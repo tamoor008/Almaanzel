@@ -19,7 +19,7 @@ import { AppScreens } from "../constants/AppScreens";
 const AuthNav = () => {
   const Stack = createNativeStackNavigator();
   const selector = useSelector(state => state.AppReducer);
-  // console.log(onboard, "onboard");
+  console.log(onboard, "onboard");
 
   return (
     <View style={{ flex: 1 }}>

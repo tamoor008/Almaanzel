@@ -7,13 +7,10 @@ import { useEffect, useState } from "react";
 export const OptionBaseComp2 = ({ heading, options, setOptions }) => {
   const [selectedItem, setSelectedItem] = useState("");
   const toggleSelectedOptionByIndex = (index) => {
-    console.log("Selected Index:", index);
-    console.log("Previous Options:", options);
-
+ 
     setOptions((prevOptions) =>
       prevOptions.map((option, i) => {
         if (i === index) {
-          console.log("Updating index:", i);
           return { ...option, selected: true }; // Set selected option to true
         } else {
           return { ...option, selected: false }; // Set other options to false

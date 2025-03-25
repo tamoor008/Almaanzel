@@ -13,7 +13,7 @@ import FontFamilty from "../../../../constants/FontFamilty";
 import { QoutationBaseComp } from "../components/QoutationBaseComp";
 import { OptionBaseComp } from "../components/OptionBaseComp";
 
-export const WaterTankHeater = ({ item, updateServiceDetails, setPrice }) => {
+export const WaterTankHeater = ({ item, updateServiceDetails, setPrice,setAddons,addons  }) => {
   const scrollViewRef = useRef(null);
 
   const [waterTankCleaningOption, setWaterTankCleaningOption] = useState([
@@ -179,6 +179,7 @@ export const WaterTankHeater = ({ item, updateServiceDetails, setPrice }) => {
   // Run updateSelectedOptions when any option changes
   useEffect(() => {
     updateSelectedOptions();
+    setAddons(true)
   }, [waterTankCleaningOption, waterHeaterOptions, onGroundOption,tabs,waterLevelOptions]);
 
   return (

@@ -8,7 +8,6 @@ import moment from "moment";
 import { CustomButton } from "../../../../components/CustomButton";
 import { useSelector } from "react-redux";
 import database from "@react-native-firebase/database"; // Firebase Realtime Database
-import RatingModal from "../../../fixer/components/RatingModal";
 import { useState } from "react";
 import ConfirmModal from "../../../fixer/components/ConfirmModal";
 import CancelModal from "../../../fixer/components/CancelModal";
@@ -19,7 +18,6 @@ export const BookingDetails = ({ navigation }) => {
   const selector = useSelector(state => state.AppReducer);
   const route = useRoute()
   const user = selector.user
-  console.log(user);
   const fixerId = user.uid
   const [reason, setReason] = useState("");
 
@@ -91,7 +89,6 @@ export const BookingDetails = ({ navigation }) => {
         .ref(`/serviceRequests/${userId}/${displayId}`)
         .update({ status: status, fixerId: fixerId, reason: reason });
 
-      console.log("Service status updated to assigned");
     } catch (error) {
       console.error("Error updating service status:", error);
       throw error; // Propagate error
@@ -107,7 +104,6 @@ export const BookingDetails = ({ navigation }) => {
         .child(displayId)
         .set(updatedItem);
 
-      console.log("Fixer added to service with updated status");
     } catch (error) {
       console.log("Error adding fixer:", error);
       throw error; // Ensure error bubbles up

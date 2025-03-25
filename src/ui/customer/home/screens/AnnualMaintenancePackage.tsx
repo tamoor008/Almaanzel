@@ -13,7 +13,7 @@ import { Description } from "../components/Description";
 import FontFamilty from "../../../../constants/FontFamilty";
 import { AnnualMaintenanceComp } from "../components/AnnualMaintenanceComp";
 
-export const AnnualMaintenancePackage = ({ item, setPrice, updateServiceDetails }) => {
+export const AnnualMaintenancePackage = ({ item, setPrice, updateServiceDetails,setAddons,addons  }) => {
   const scrollViewRef = useRef(null);
 
 
@@ -196,6 +196,7 @@ export const AnnualMaintenancePackage = ({ item, setPrice, updateServiceDetails 
 
   useEffect(()=>{
     calculateTotalPrice()
+    setAddons(true)
   },[tabs])
 
   return (

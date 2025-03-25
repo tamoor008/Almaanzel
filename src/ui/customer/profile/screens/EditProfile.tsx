@@ -13,7 +13,6 @@ import { useSelector } from "react-redux";
 export const EditProfile = ({ navigation }) => {
   const selector = useSelector(state => state.AppReducer);
   const user=selector.user
-  console.log(user);
   
   const dispatch = useDispatch();
   const [name, setName] = useState(user.displayName);
@@ -27,7 +26,6 @@ export const EditProfile = ({ navigation }) => {
     setLoader(true);
   
     if (!userId) {
-      console.log("User not logged in");
       setLoader(false);
       dispatch(setisLoggedin(false));
       return;
@@ -36,7 +34,6 @@ export const EditProfile = ({ navigation }) => {
     try {
       // Update user data in Firebase
       await reference.child(`${userId}/userInfo`).update(updatedData);
-      console.log("User info updated successfully");
   
       // Fetch updated user data
       const snapshot = await reference.child(`${userId}/userInfo`).once("value");
@@ -45,14 +42,13 @@ export const EditProfile = ({ navigation }) => {
         const updatedUserData = snapshot.val();
         dispatch(setUser(updatedUserData)); // Save updated data in Redux
       } else {
-        console.log("Failed to fetch updated user data");
       }
   
       setLoader(false);
       navigation.goBack();
     } catch (error) {
       setErrorText("Error updating user info: " + error.message);
-      console.log("Error updating user info:", error.message);
+      // console.log("Error updating user info:", error.message);
       setLoader(false);
     }
   };

@@ -7,7 +7,7 @@ import { AppImages } from "../../../../constants/AppImages";
 import moment from "moment";
 
 export const UpcomingBookingComp = ({ item, navigation }) => {
-  console.log(item.details.addon);
+  // console.log(item.details.addon);
   const dataArray = Object.entries(item.details.addon).map(([key, value]) => ({ key, value }));
 
   const mergeTimeSlots = (slots) => {

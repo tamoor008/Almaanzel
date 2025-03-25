@@ -10,22 +10,19 @@ import FontFamilty from "../../../../constants/FontFamilty";
 export const Reviews = ({ navigation }) => {
   const route = useRoute()
   const { serviceType } = route.params
-  console.log(serviceType);
 
   const [reviews, setReviews] = useState([
   
   ]);
   const [loader, setLoader] = useState(false)
   const fetchData = async () => {
-    console.log('fetchData');
 
     setLoader(true);
     try {
       const snapshot = await database().ref('/reviews').child(serviceType).once('value');
 
       if (snapshot.exists()) {
-        console.log('DONE');
-        console.log(snapshot.val());
+   
 
         // Convert object to array with key as `id`
         const data = snapshot.val();
@@ -36,7 +33,6 @@ export const Reviews = ({ navigation }) => {
 
         setReviews(formattedArray);
       } else {
-        console.log('No data found');
         setReviews([]); // Ensure it's an empty array if no data exists
       }
     } catch (error) {

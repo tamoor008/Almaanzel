@@ -69,9 +69,7 @@ export const PersonComp = ({ item, removePerson, index, updatePerson }) => {
           setValue={(selectedValue) => {
           
             setValue(selectedValue);
-            console.log('selectedValue',{selectedValue});
-            console.log('value',value);
-
+          
           }}
           setItems={setItems}
           placeholder="Select Person"

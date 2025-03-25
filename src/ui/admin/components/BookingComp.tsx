@@ -43,9 +43,7 @@ export const BookingComp = ({ item, navigation, fixers }) => {
 
   const [modalVisible, setModalVisible] = useState(false);
   const handleFixerSelect = async (fixerId) => {
-    console.log("Selected Fixer:", fixerId);
-    console.log("Item:", item?.userId);
-  
+ 
     if (!item || !item.userId || !item.displayId) {
       console.error("Item data is missing:", item);
       return;
@@ -88,7 +86,7 @@ export const BookingComp = ({ item, navigation, fixers }) => {
         .child(displayId)
         .set(updatedItem);
   
-      console.log("Fixer added to service with updated status");
+      // console.log("Fixer added to service with updated status");
     } catch (error) {
       console.error("Error adding fixer:", error);
       throw error; // Ensure error bubbles up
@@ -103,7 +101,7 @@ export const BookingComp = ({ item, navigation, fixers }) => {
       if (snapshot.exists()) {
         return snapshot.val(); // Returns the fixer's data
       } else {
-        console.log("Fixer not found");
+        // console.log("Fixer not found");
         return null;
       }
     } catch (error) {
@@ -115,7 +113,7 @@ export const BookingComp = ({ item, navigation, fixers }) => {
   useEffect(() => {
     const getFixerData = async () => {
       if (item.status === "assigned") {
-        console.log(item.fixerId);
+        // console.log(item.fixerId);
         const fixerData = await fetchFixerById(item.fixerId);
         if (fixerData) {
           setFixer(fixerData);

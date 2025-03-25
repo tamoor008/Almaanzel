@@ -13,7 +13,7 @@ import FontFamilty from "../../../../constants/FontFamilty";
 import { QoutationBaseComp } from "../components/QoutationBaseComp";
 import { CustomInputBaseComp } from "../components/CustomInputBaseComp";
 
-export const HomeSoftWork = ({ item, setPrice, updateServiceDetails }) => {
+export const HomeSoftWork = ({ item, setPrice, updateServiceDetails ,setAddons,addons }) => {
   const scrollViewRef = useRef(null);
   const [serviceInput, setServiceInput] = useState("1");
 

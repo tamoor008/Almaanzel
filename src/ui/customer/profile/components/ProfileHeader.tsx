@@ -13,7 +13,6 @@ import { AppImages } from "../../../../constants/AppImages";
 
 export const ProfileHeader = ({ heading, profile, navigation, name, img }) => {
   const onBackPress = () => {
-    console.log("NAV GO BACK");
     navigation.goBack();
   };
   return (

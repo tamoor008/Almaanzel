@@ -49,7 +49,6 @@ export const Login = ({ navigation }) => {
     try {
       const userCredential = await auth().signInWithEmailAndPassword(email, password);
       const user = userCredential.user;
-      console.log("User signed in:", user);
   
       // Fetch user data from Firebase Realtime Database
       const snapshot = await reference.child(`${user.uid}/userInfo`).once("value");
@@ -58,7 +57,7 @@ export const Login = ({ navigation }) => {
         const userData = snapshot.val();
         dispatch(setUser(userData)); // Save fetched data into Redux
       } else {
-        console.log("User data not found in database");
+        // console.log("User data not found in database");
         dispatch(setUser(null));
       }
   
@@ -67,7 +66,7 @@ export const Login = ({ navigation }) => {
   
     } catch (error) {
       setErrorText(error.message);
-      console.log("Sign-in error:", error.toString());
+      // console.log("Sign-in error:", error.toString());
       setLoader(false);
     }
   };

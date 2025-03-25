@@ -16,7 +16,7 @@ import { SingleOptionComp } from "../components/SingleOptionComp";
 import { CustomInputBaseComp } from "../components/CustomInputBaseComp";
 import { OptionBaseComp2 } from "../components/OptionBaseComp2";
 
-export const AcServicePackages = ({ item, setPrice, updateServiceDetails }) => {
+export const AcServicePackages = ({ item, setPrice, updateServiceDetails,setAddons,addons  }) => {
   const scrollViewRef = useRef(null);
   const [numberOfDucts, setNumberOfDucts] = useState("1");
 
@@ -55,7 +55,6 @@ export const AcServicePackages = ({ item, setPrice, updateServiceDetails }) => {
   };
 
   const updateSelectedOptions = () => {
-    console.log("FUNCTION RUN");
     
     const selectedTab = tabs.find((tab) => tab.selected)?.label || null;
     let totalPrice = tabs.find((tab) => tab.selected)?.price || 0;
@@ -80,6 +79,8 @@ export const AcServicePackages = ({ item, setPrice, updateServiceDetails }) => {
 
   useEffect(() => {
     updateSelectedOptions();
+    setAddons(true)
+
   }, [tabs, numberOfDucts, splitType,maintenanceOptions]);
 
   return (

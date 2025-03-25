@@ -25,7 +25,7 @@ export const DateSelection = ({ type, updateServiceData ,setTimeSlot}) => {
   
 
   const onSelectDate = (date) => {
-    console.log('select date');
+    // console.log('select date');
     const formattedDate = new Date(date).toISOString(); // Convert to string
 
     setSelectedDate(date);
@@ -59,7 +59,7 @@ export const DateSelection = ({ type, updateServiceData ,setTimeSlot}) => {
     const isDateValid = !isNaN(parsedDate.getTime());
   
     if (!isDateValid) {
-      console.log("Invalid Date");
+      // console.log("Invalid Date");
       setTimeSlot(false);
       
       return; // Exit the function early
@@ -68,12 +68,12 @@ export const DateSelection = ({ type, updateServiceData ,setTimeSlot}) => {
     const selectedSlots = timeSlots.filter(slot => slot.selected); // Get only selected slots
     const formattedDate = parsedDate.toISOString(); // Convert to string
   
-    console.log("selectedSlots", selectedSlots);
+    // console.log("selectedSlots", selectedSlots);
   
     // Check if selectedSlots and formattedDate have valid data
     const isValid = selectedSlots.length > 0 && formattedDate.trim() !== "";
   
-    console.log("isValid", isValid);
+    // console.log("isValid", isValid);
   
     setTimeSlot(isValid); // Set to true if valid, otherwise false
   };

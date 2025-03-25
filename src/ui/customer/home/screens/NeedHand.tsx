@@ -27,7 +27,7 @@ export const NeedHand = ({ item, updateServiceDetails,setPrice,setAddons,addons 
     setPersons(updatedPersons);
     updateServiceDetails("NeedHandPersons", updatedPersons);
     compilePrice(updatedPersons)
-    console.log('new person',updatedPersons);
+    // console.log('new person',updatedPersons);
     validateAddons(updatedPersons)
 
   };
@@ -51,7 +51,7 @@ export const NeedHand = ({ item, updateServiceDetails,setPrice,setAddons,addons 
     updateServiceDetails("NeedHandPersons", updatedPersons);
     compilePrice(updatedPersons)
 
-    console.log('updatePerson',updatedPersons);
+    // console.log('updatePerson',updatedPersons);
     validateAddons(updatedPersons)
   };
 
@@ -74,7 +74,7 @@ export const NeedHand = ({ item, updateServiceDetails,setPrice,setAddons,addons 
       item.personType.trim() !== "" && 
       item.hours > 0
     );
-  console.log('isValid',isValid);
+  // console.log('isValid',isValid);
   
     setAddons(isValid); // Set addons to true if all conditions are met, otherwise false
   };

@@ -41,7 +41,7 @@ export const PaymentInformation = ({ navigation, updateServiceData,setAddresspay
 
     // Get the selected payment method
     const selectedPayment = paymentMethods.find((_, i) => i === index);
-    console.log('selectedPayment', selectedPayment);
+    // console.log('selectedPayment', selectedPayment);
 
 
     // Update service data with only the selected payment method

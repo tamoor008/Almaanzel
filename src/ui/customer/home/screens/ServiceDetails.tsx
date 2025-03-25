@@ -43,7 +43,7 @@ export const ServiceDetails = ({ navigation }) => {
 
   // ✅ Function to update service details dynamically
   const updateServiceData = (key, value) => {
-    console.log('serviceData', serviceData);
+    // console.log('serviceData', serviceData);
 
     setServiceData((prevData) => ({
       ...prevData,
@@ -79,7 +79,7 @@ export const ServiceDetails = ({ navigation }) => {
 
   // ✅ Function to handle service submission
   const submitServiceRequest = async () => {
-    console.log('Final service data:', serviceData);
+    // console.log('Final service data:', serviceData);
     setLoader(true)
 
     try {
@@ -94,7 +94,7 @@ export const ServiceDetails = ({ navigation }) => {
       setSuccessModalVisible(true);
       setLoader(false)
     } catch (error) {
-      console.log("Error submitting service request:", error.message);
+      // console.log("Error submitting service request:", error.message);
       Alert.alert('Error', "There is some issue with the service, Kindly try again later.");
       setLoader(false)
     }
@@ -112,19 +112,19 @@ export const ServiceDetails = ({ navigation }) => {
       case "NeedHand":
         return <NeedHand setAddons={setAddons} addons={addons} setPrice={setPrice} updateServiceDetails={updateServiceData} item={item} />;
       case "watertank&services":
-        return <WaterTankHeater setPrice={setPrice} updateServiceDetails={updateServiceData} item={item} />;
+        return <WaterTankHeater setAddons={setAddons} addons={addons} setPrice={setPrice} updateServiceDetails={updateServiceData} item={item} />;
       case "GardenPackages":
-        return <GardenPackages setPrice={setPrice} updateServiceDetails={updateServiceData} item={item} />;
+        return <GardenPackages setAddons={setAddons} addons={addons} setPrice={setPrice} updateServiceDetails={updateServiceData} item={item} />;
       case "AcServicePackages":
-        return <AcServicePackages setPrice={setPrice} updateServiceDetails={updateServiceData} item={item} />;
+        return <AcServicePackages setAddons={setAddons} addons={addons} setPrice={setPrice} updateServiceDetails={updateServiceData} item={item} />;
       case "EmergencyCall":
-        return <EmergencyCall setPrice={setPrice} updateServiceDetails={updateServiceData} item={item} />;
+        return <EmergencyCall setAddons={setAddons} addons={addons} setPrice={setPrice} updateServiceDetails={updateServiceData} item={item} />;
       case "WindowsCleaning":
-        return <WindowsCleaning setPrice={setPrice} updateServiceDetails={updateServiceData} item={item} />;
+        return <WindowsCleaning setAddons={setAddons} addons={addons} setPrice={setPrice} updateServiceDetails={updateServiceData} item={item} />;
       case "HomeSoftWork":
-        return <HomeSoftWork setPrice={setPrice} updateServiceDetails={updateServiceData} item={item} />;
+        return <HomeSoftWork setAddons={setAddons} addons={addons} setPrice={setPrice} updateServiceDetails={updateServiceData} item={item} />;
       case "AnnualMaintenancePackage":
-        return <AnnualMaintenancePackage setPrice={setPrice} updateServiceDetails={updateServiceData} item={item} />;
+        return <AnnualMaintenancePackage setAddons={setAddons} addons={addons} setPrice={setPrice} updateServiceDetails={updateServiceData} item={item} />;
       default:
         return <View style={{ flex: 1 }}></View>;
     }

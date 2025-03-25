@@ -75,7 +75,7 @@ export const FixerHomeScreen = ({ navigation }) => {
         setUpcomingBookings(upcoming);
         setPastBookings(past);
       } else {
-        console.log('No data available');
+        // console.log('No data available');
         setUpcomingBookings([]);
         setPastBookings([]);
       }
@@ -87,14 +87,14 @@ export const FixerHomeScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    console.log('TABS RUN');
+    // console.log('TABS RUN');
     
     fetchData()
   }, [tabs])
 
 
   useEffect(() => {
-    console.log('FOCUS RUN');
+    // console.log('FOCUS RUN');
 
     fetchData()
 

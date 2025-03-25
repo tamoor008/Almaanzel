@@ -4,7 +4,7 @@ import { AppColors } from "../../../constants/AppColors";
 
 export const OnboardComp = ({ item }) => {
   const { height, width } = Dimensions.get("window");
-  console.log(height);
+  // console.log(height);
 
   return (
     <View style={styles.container}>

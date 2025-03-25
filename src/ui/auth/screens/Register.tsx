@@ -76,12 +76,12 @@ export const Register = ({ navigation }) => {
             })
             .catch((dbError) => {
               setLoader(false);
-              console.log('Database error:', dbError.message);
+              // console.log('Database error:', dbError.message);
             });
         });
     } catch (error) {
       setLoader(false);
-      console.log('Signup error:', error.message);
+      // console.log('Signup error:', error.message);
     }
   };
   

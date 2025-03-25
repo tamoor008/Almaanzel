@@ -23,9 +23,9 @@ export const Addfixer = ({ navigation }) => {
     const pickImage = () => {
         launchImageLibrary({ mediaType: "photo" }, (response) => {
             if (response.didCancel) {
-                console.log("User cancelled image picker");
+                // console.log("User cancelled image picker");
             } else if (response.error) {
-                console.log("Image picker error: ", response.error);
+                // console.log("Image picker error: ", response.error);
             } else {
                 setImage(response.assets[0].uri); // Set selected image URI
             }

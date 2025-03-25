@@ -31,12 +31,12 @@ export const AdminHomeScreen = ({ navigation }) => {
     setLoader(true);
     try {
       const snapshot = await database().ref('/serviceRequests').once('value');
-      console.log(snapshot);
+      // console.log(snapshot);
 
 
       if (snapshot.exists()) {
         const rawData = snapshot.val();
-        console.log('Raw Data:', rawData);
+        // console.log('Raw Data:', rawData);
 
         const unassigned = [];
         const assigned = [];
@@ -71,7 +71,7 @@ export const AdminHomeScreen = ({ navigation }) => {
         setCancelledBookings(cancelled);
         setCompletedBookings(completed);
       } else {
-        console.log('No data available');
+        // console.log('No data available');
         setUnassignedBookings([]);
         setAssignedBookings([]);
         setCancelledBookings([]);
@@ -93,7 +93,7 @@ export const AdminHomeScreen = ({ navigation }) => {
         const fixerList = Object.keys(allUsers)
           .map((key) => ({ id: key, ...allUsers[key] })) // Convert to array
           .filter((user) => user.userInfo.userType === "fixer"); // Filter fixers only
-        console.log(fixerList);
+        // console.log(fixerList);
 
         setFixers(fixerList);
       } else {

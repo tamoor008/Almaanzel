@@ -40,7 +40,7 @@ export const ServiceComp = ({ item, navigatetoReviews }) => {
           </View>
         </View>
 
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        {/* <View style={{ flexDirection: "row", alignItems: "center" }}>
           {item.priceDescription && (
             <Text
               style={{ ...styles.descriptionText, color: AppColors.black50 }}>
@@ -56,7 +56,7 @@ export const ServiceComp = ({ item, navigatetoReviews }) => {
             }}>
             {item.price}
           </Text>
-        </View>
+        </View> */}
       </View>
 
       <TouchableOpacity onPress={()=>navigatetoReviews(item)} style={styles.reviewStyle}>

@@ -5,7 +5,7 @@ import { Description } from "../components/Description";
 import FontFamilty from "../../../../constants/FontFamilty";
 import { CustomLargeTextInput } from "../../../../components/CustomLargeTextInput";
 
-export const EmergencyCall = ({  item, setPrice, updateServiceDetails }) => {
+export const EmergencyCall = ({  item, setPrice, updateServiceDetails,setAddons,addons  }) => {
   const scrollViewRef = useRef(null);
 
   const [issue, setIssue] = useState("");
@@ -16,7 +16,9 @@ export const EmergencyCall = ({  item, setPrice, updateServiceDetails }) => {
   }
 
   useEffect(()=>{
-  })
+    setAddons(true)
+
+  },[])
 
   const openWhatsApp = () => {
     let phoneNumber = '+971509819899'; // WhatsApp number

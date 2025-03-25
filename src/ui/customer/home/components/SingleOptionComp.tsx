@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { AppColors } from "../../../../constants/AppColors";
-import { AppImages } from "../../../../constants/AppImages";
 import FontFamilty from "../../../../constants/FontFamilty";
 import { useEffect, useState } from "react";
 
@@ -12,13 +11,10 @@ export const SingleOptionComp = ({
 }) => {
   const [selectedItem, setSelectedItem] = useState("");
   const toggleSelectedOptionByIndex = (index) => {
-    console.log("Selected Index:", index);
-    console.log("Previous Options:", options);
-
+   
     setOptions((prevOptions) =>
       prevOptions.map((option, i) => {
         if (i === index) {
-          console.log("Updating index:", i);
           return { ...option, selected: !option.selected }; // Set selected option to true
         }
       })

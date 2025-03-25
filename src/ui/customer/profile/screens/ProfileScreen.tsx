@@ -20,7 +20,7 @@ import { useSelector } from "react-redux";
 export const ProfileScreen = ({ navigation }) => {
   const selector = useSelector(state => state.AppReducer);
   const user=selector.user
-  console.log(user);
+  // console.log(user);
   
   const dispatch = useDispatch();
   const [profileOptions, setProfileOptions] = useState([

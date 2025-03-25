@@ -16,7 +16,7 @@ import { SingleOptionComp } from "../components/SingleOptionComp";
 import { CustomInputBaseComp } from "../components/CustomInputBaseComp";
 import { OptionBaseComp2 } from "../components/OptionBaseComp2";
 
-export const WindowsCleaning = ({ item, setPrice, updateServiceDetails }) => {
+export const WindowsCleaning = ({ item, setPrice, updateServiceDetails,setAddons,addons  }) => {
   const scrollViewRef = useRef(null);
   const [tabs, setTabs] = useState([
     { label: "Exterior & interior glass and frame", selected: true, price: 0, description: 'ss' },
@@ -35,7 +35,6 @@ export const WindowsCleaning = ({ item, setPrice, updateServiceDetails }) => {
   };
 
   const updateSelectedOptions = () => {
-    console.log("FUNCTION RUN");
 
     const selectedTab = tabs.find((tab) => tab.selected)?.label || null;
     let totalPrice = tabs.find((tab) => tab.selected)?.price || 0;
@@ -60,6 +59,8 @@ export const WindowsCleaning = ({ item, setPrice, updateServiceDetails }) => {
 
   useEffect(() => {
     updateSelectedOptions();
+    setAddons(true)
+
   }, [tabs]);
 
   return (

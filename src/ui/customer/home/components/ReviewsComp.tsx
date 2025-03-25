@@ -5,7 +5,6 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import moment from "moment";
 
 export const ReviewsComp = ({ item }) => {
-  console.log('item',item);
   
   return (
     <View style={styles.container}>

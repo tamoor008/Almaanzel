@@ -14,7 +14,7 @@ import { QoutationBaseComp } from "../components/QoutationBaseComp";
 import { OptionBaseComp } from "../components/OptionBaseComp";
 import { OptionBaseComp2 } from "../components/OptionBaseComp2";
 
-export const GardenPackages = ({ item, setPrice, updateServiceDetails }) => {
+export const GardenPackages = ({ item, setPrice, updateServiceDetails,setAddons,addons  }) => {
   const scrollViewRef = useRef(null);
 
   const [pestControlOptions, setPestControlOptions] = useState([
@@ -90,7 +90,7 @@ export const GardenPackages = ({ item, setPrice, updateServiceDetails }) => {
   };
 
   const updateSelectedOptions = () => {
-    console.log("FUNCTION RUN");
+    // console.log("FUNCTION RUN");
     
     const selectedTab = tabs.find((tab) => tab.selected)?.label || null;
     let totalPrice = tabs.find((tab) => tab.selected)?.price || 0;
@@ -164,6 +164,7 @@ export const GardenPackages = ({ item, setPrice, updateServiceDetails }) => {
 
   useEffect(() => {
     updateSelectedOptions();
+    setAddons(true)
   }, [tabs, pestControlOptions,gardernsSerives,packages,basicOptions]);
 
   return (

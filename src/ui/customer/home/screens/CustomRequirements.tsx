@@ -8,11 +8,9 @@ import { CustomLargeTextInput } from "../../../../components/CustomLargeTextInpu
 export const CustomRequirements = ({ navigation,updateServiceData }) => {
   const [description, setDescription] = useState("");
   const handleImagesSelected = (images) => {
-    console.log("Selected Images:", images);
   };
 
   const descriptionUpdated=(text)=>{
-    console.log(text);
     
     setDescription(text)
     updateServiceData('Description',text)

@@ -59,7 +59,6 @@ export const Bookings = ({ navigation }) => {
 
       if (snapshot.exists()) {
         const rawData = snapshot.val();
-        console.log('Raw Data:', rawData);
 
         const today = moment().format("YYYY-MM-DD");
 

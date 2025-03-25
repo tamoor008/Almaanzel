@@ -12,7 +12,6 @@ import database from "@react-native-firebase/database"; // Firebase Realtime Dat
 export const PastBookingComp = ({ item ,navigation,fetchData}) => {
   const selector = useSelector(state => state.AppReducer);
   const user = selector.user
-  console.log(user);
   
   const [modalVisible,setModalVisible]=useState(false)
   const mergeTimeSlots = (slots) => {
@@ -78,9 +77,8 @@ export const PastBookingComp = ({ item ,navigation,fetchData}) => {
         .child(displayId)
         .set(updatedItem);
 
-      console.log("Fixer added to service with updated status");
     } catch (error) {
-      console.log("Error adding fixer:", error);
+      // console.log("Error adding fixer:", error);
       throw error; // Ensure error bubbles up
     }
   };
@@ -94,7 +92,7 @@ export const PastBookingComp = ({ item ,navigation,fetchData}) => {
         .ref(`/reviews/${serviceType}`)
         .push({review:data.review,rating:data.rating,serviceType:serviceType,timestamp:moment().valueOf()});
 
-      console.log("Review Data updated to assigned");
+      // console.log("Review Data updated to assigned");
     } catch (error) {
       console.error("Error updating service status:", error);
       throw error; // Propagate error
